@@ -1,7 +1,7 @@
 {
   "id": "sldrclk",
   "name": "SLDR Clock",
-  "version": "0.01",
+  "version": "0.02",
   "description": "A fork of Dev Clock with less useful features",
   "icon": "se.sldr.clk.png",
   "type": "clock",
@@ -9,7 +9,7 @@
   "supports": ["BANGLEJS","BANGLEJS2"],
   "allow_emulator": true,
   "storage": [
-    {"name":"sldrclk.app.js","url":"se.sldr.clk.js"},
+    {"name":"sldrclk.app.js","url":"se.sldr.clk-min.js"},
     {"name":"sldrclk.img","url":"se.sldr.clk.icon.js","evaluate":true}
   ]
 }
