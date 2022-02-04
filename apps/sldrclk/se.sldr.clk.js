@@ -33,6 +33,14 @@ function getUTCTime(d) {
   return d.toUTCString().split(' ')[4].split(':').map(function(d){return Number(d)});
 }
 
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  var yearStart = newDate(Date.UTC(d.getUTCFullYear(),0,1));
+  var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+  return weekNo;
+}
+
 function drawSimpleClock() {
   // get date
   var d = new Date();
@@ -97,7 +105,7 @@ function drawSimpleClock() {
   // Draw day of week, days in month, and week number
   g.setFont(font, smallFontSize);
   // g.drawString(`md:${dom} l:${sincenew.toFixed(2)}`, xyCenter, yposDml, true);
-  g.drawString(`d:${locale.dow(d,true)} md:${dom} w:${d.getWeek()}`, xyCenter, yposDml, true);
+  g.drawString(`d:${locale.dow(d,true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
 
   // Days since full moon
   var knownnew = new Date(2020,02,24,09,28,0);
