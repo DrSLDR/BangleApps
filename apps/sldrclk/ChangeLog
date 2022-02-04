@@ -1,3 +1,4 @@
 0.01: Forked from Dev Clock, ironed out ISO-8601 time and frequency
 0.02: Using minified code
 0.03: Replaced moon phase display, removed beats
+0.04: Bump to fix bugged week counter
