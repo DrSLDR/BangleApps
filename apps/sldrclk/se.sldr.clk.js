@@ -81,6 +81,20 @@ function getMoonPhase(d) {
   return phase;
 }
 
+function getPoD(d) {
+  // We can safely assume a day is 24 hours
+  var startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  return Math.round((d - startOfDay) / (10 * 60 * 60 * 24));
+}
+
+function getPoY(d) {
+  // We can't safely assume that a year is 365 days, so figure that out first
+  var startOfYear = new Date(d.getFullYear(), 0, 1);
+  var endOfYear = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
+  var lengthOfYear = endOfYear - startOfYear;
+  return Math.round(((d - startOfYear) * 100) / lengthOfYear);
+}
+
 function drawSimpleClock() {
   // get date
   var d = new Date();
@@ -145,9 +159,9 @@ function drawSimpleClock() {
   g.setFont(font, smallFontSize);
   g.drawString(`d:${locale.dow(d, true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
 
-  // Draw phase of the moon
+  // Draw phase of the moon, percent passed of day and year
   g.setFont(font, smallFontSize);
-  g.drawString(`m:${getMoonPhase(d)} pod: poy:`, xyCenter, yposDayMonth, true);
+  g.drawString(`m:${getMoonPhase(d)} pod:${getPoD(d)}% poy:${getPoY(d)}%`, xyCenter, yposDayMonth, true);
 
   // draw gmt
   var gmt = da[5];

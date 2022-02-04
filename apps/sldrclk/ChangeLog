@@ -2,3 +2,4 @@
 0.02: Using minified code
 0.03: Replaced moon phase display, removed beats
 0.04: Bump to fix bugged week counter
+0.05: Added percent of day and year values
