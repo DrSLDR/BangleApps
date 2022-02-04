@@ -25,6 +25,7 @@ const moonTime = [
   (((3*moonPeriod)/4) + 0.5),
   (moonPeriod - 0.5)
 ];
+const fixMoon = new Date(2020,02,24,09,28,0);
 
 // Check settings for what type our clock should be
 var is12Hour = (require("Storage").readJSON("setting.json",1)||{})["12hour"];
@@ -44,6 +45,40 @@ function getWeekNumber(d) {
   var yearStart = new Date(d.getFullYear(),0,1);
   var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
   return weekNo;
+}
+
+function getMoonPhase(d){
+  // Get millisecond difference and divide down to cycles
+  var cycles = (d.getTime()-fixMoon.getTime())/1000/60/60/24/moonPeriod;
+
+  // Multiply decimal component back into days since new moon
+  var sincenew = (cycles % 1)*moonPeriod;
+
+  // Derive moon phase
+  var phase = "new";
+  if (sincenew > moonTime[0] && sincenew <= moonTime[1]) {
+    phase = "wx.cr";
+  }
+  else if (sincenew > moonTime[1] && sincenew <= moonTime[2]) {
+    phase = "fst.q";
+  }
+  else if (sincenew > moonTime[2] && sincenew <= moonTime[3]) {
+    phase = "wx.gb";
+  }
+  else if (sincenew > moonTime[3] && sincenew <= moonTime[4]) {
+    phase = "full";
+  }
+  else if (sincenew > moonTime[4] && sincenew <= moonTime[5]) {
+    phase = "wn.gb";
+  }
+  else if (sincenew > moonTime[5] && sincenew <= moonTime[6]) {
+    phase = "lst.q";
+  }
+  else if (sincenew > moonTime[6] && sincenew <= moonTime[7]) {
+    phase = "wn.cr";
+  }
+
+  return phase;
 }
 
 function drawSimpleClock() {
@@ -112,42 +147,9 @@ function drawSimpleClock() {
   // g.drawString(`md:${dom} l:${sincenew.toFixed(2)}`, xyCenter, yposDml, true);
   g.drawString(`d:${locale.dow(d,true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
 
-  // Days since full moon
-  var knownnew = new Date(2020,02,24,09,28,0);
-
-  // Get millisecond difference and divide down to cycles
-  var cycles = (d.getTime()-knownnew.getTime())/1000/60/60/24/moonPeriod;
-
-  // Multiply decimal component back into days since new moon
-  var sincenew = (cycles % 1)*moonPeriod;
-
-  // Derive moon phase
-  var phase = "new";
-  if (sincenew > moonTime[0] && sincenew <= moonTime[1]) {
-    phase = "wx.cr";
-  }
-  else if (sincenew > moonTime[1] && sincenew <= moonTime[2]) {
-    phase = "fst.q";
-  }
-  else if (sincenew > moonTime[2] && sincenew <= moonTime[3]) {
-    phase = "wx.gb";
-  }
-  else if (sincenew > moonTime[3] && sincenew <= moonTime[4]) {
-    phase = "full";
-  }
-  else if (sincenew > moonTime[4] && sincenew <= moonTime[5]) {
-    phase = "wn.gb";
-  }
-  else if (sincenew > moonTime[5] && sincenew <= moonTime[6]) {
-    phase = "lst.q";
-  }
-  else if (sincenew > moonTime[6] && sincenew <= moonTime[7]) {
-    phase = "wn.cr";
-  }
-
   // Draw phase of the moon
   g.setFont(font, smallFontSize);
-  g.drawString(`m:${phase}`, xyCenter, yposDayMonth, true);
+  g.drawString(`m:${getMoonPhase(d)} pod: poy:`, xyCenter, yposDayMonth, true);
 
   // draw Month name, Day of the week and beats
   // var beats = Math.floor((((dutc[0] + 1) % 24) + dutc[1] / 60 + dutc[2] / 3600) * 1000 / 24);
