@@ -1,37 +1,37 @@
 var locale = require("locale");
 /* jshint esversion: 6 */
-const big = g.getWidth()>200;
-const timeFontSize = big?4:3;
-const dateFontSize = big?3:2;
-const smallFontSize = big?2:1;
+const big = g.getWidth() > 200;
+const timeFontSize = big ? 4 : 3;
+const dateFontSize = big ? 3 : 2;
+const smallFontSize = big ? 2 : 1;
 const font = "6x8";
 
 const xyCenter = g.getWidth() / 2;
 const yposTime = 50;
-const yposDate = big?85:75;
-const yposTst = big?115:95;
-const yposDml = big?170:130;
-const yposDayMonth = big?195:140;
-const yposGMT = big?220:150;
+const yposDate = big ? 85 : 75;
+const yposTst = big ? 115 : 95;
+const yposDml = big ? 170 : 130;
+const yposDayMonth = big ? 195 : 140;
+const yposGMT = big ? 220 : 150;
 
 const moonPeriod = 29.53;
 const moonTime = [
   0.5,
-  ((moonPeriod/4) - 0.5),
-  ((moonPeriod/4) + 0.5),
-  ((moonPeriod/2) - 0.5),
-  ((moonPeriod/2) + 0.5),
-  (((3*moonPeriod)/4) - 0.5),
-  (((3*moonPeriod)/4) + 0.5),
+  ((moonPeriod / 4) - 0.5),
+  ((moonPeriod / 4) + 0.5),
+  ((moonPeriod / 2) - 0.5),
+  ((moonPeriod / 2) + 0.5),
+  (((3 * moonPeriod) / 4) - 0.5),
+  (((3 * moonPeriod) / 4) + 0.5),
   (moonPeriod - 0.5)
 ];
-const fixMoon = new Date(2020,02,24,09,28,0);
+const fixMoon = new Date(2020, 02, 24, 09, 28, 0);
 
 // Check settings for what type our clock should be
-var is12Hour = (require("Storage").readJSON("setting.json",1)||{})["12hour"];
+var is12Hour = (require("Storage").readJSON("setting.json", 1) || {})["12hour"];
 
 function getUTCTime(d) {
-  return d.toUTCString().split(' ')[4].split(':').map(function(d){return Number(d)});
+  return d.toUTCString().split(' ')[4].split(':').map(function (d) { return Number(d) });
 }
 
 function getWeekNumber(d) {
@@ -42,17 +42,17 @@ function getWeekNumber(d) {
   // Set the day to the nearest Thursday (current date + 4 - current day number)
   d.setDate(d.getDate() + 4 - (d.getDay() || 7));
   // Define the start of the year
-  var yearStart = new Date(d.getFullYear(),0,1);
-  var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+  var yearStart = new Date(d.getFullYear(), 0, 1);
+  var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
   return weekNo;
 }
 
-function getMoonPhase(d){
+function getMoonPhase(d) {
   // Get millisecond difference and divide down to cycles
-  var cycles = (d.getTime()-fixMoon.getTime())/1000/60/60/24/moonPeriod;
+  var cycles = (d.getTime() - fixMoon.getTime()) / 1000 / 60 / 60 / 24 / moonPeriod;
 
   // Multiply decimal component back into days since new moon
-  var sincenew = (cycles % 1)*moonPeriod;
+  var sincenew = (cycles % 1) * moonPeriod;
 
   // Derive moon phase
   var phase = "new";
@@ -99,16 +99,16 @@ function drawSimpleClock() {
 
   var meridian = "";
   if (is12Hour) {
-    hours = parseInt(hours,10);
+    hours = parseInt(hours, 10);
     meridian = "AM";
     if (hours == 0) {
       hours = 12;
       meridian = "AM";
     } else if (hours >= 12) {
       meridian = "PM";
-      if (hours>12) hours -= 12;
+      if (hours > 12) hours -= 12;
     }
-    hours = (" "+hours).substr(-2);
+    hours = (" " + hours).substr(-2);
   }
 
   // Time
@@ -120,12 +120,12 @@ function drawSimpleClock() {
   // Derive datestrings
   var month = d.getMonth() + 1;
   var sMonth = month.toString();
-  if (month < 10){
+  if (month < 10) {
     sMonth = "0" + sMonth;
   }
   var day = d.getDate();
   var sDay = day.toString();
-  if (day < 10){
+  if (day < 10) {
     sDay = "0" + sDay;
   }
 
@@ -134,26 +134,20 @@ function drawSimpleClock() {
   g.drawString(`${d.getFullYear()}-${sMonth}-${sDay}`, xyCenter, yposDate, true);
 
   // Timestamp
-  var tst = Math.floor(d.getTime()/1000);
+  var tst = Math.floor(d.getTime() / 1000);
   g.setFont(font, smallFontSize);
   g.drawString(`tst:${tst}`, xyCenter, yposTst, true);
 
   //Days in month
-  var dom = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+  var dom = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
 
-  // Draw days in month and sime since new moon
   // Draw day of week, days in month, and week number
   g.setFont(font, smallFontSize);
-  // g.drawString(`md:${dom} l:${sincenew.toFixed(2)}`, xyCenter, yposDml, true);
-  g.drawString(`d:${locale.dow(d,true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
+  g.drawString(`d:${locale.dow(d, true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
 
   // Draw phase of the moon
   g.setFont(font, smallFontSize);
   g.drawString(`m:${getMoonPhase(d)} pod: poy:`, xyCenter, yposDayMonth, true);
-
-  // draw Month name, Day of the week and beats
-  // var beats = Math.floor((((dutc[0] + 1) % 24) + dutc[1] / 60 + dutc[2] / 3600) * 1000 / 24);
-  // g.drawString(`m:${locale.month(d,true)} d:${locale.dow(d,true)} @${beats}`, xyCenter, yposDayMonth, true);
 
   // draw gmt
   var gmt = da[5];
@@ -162,7 +156,7 @@ function drawSimpleClock() {
 }
 
 // handle switch display on by pressing BTN1
-Bangle.on('lcdPower', function(on) {
+Bangle.on('lcdPower', function (on) {
   if (on) drawSimpleClock();
 });
 
