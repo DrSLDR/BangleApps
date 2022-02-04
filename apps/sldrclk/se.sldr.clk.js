@@ -35,7 +35,7 @@ function getUTCTime(d) {
 
 function getWeekNumber(d) {
   // Define a new date that's in UTC
-  d = new Date(d - (Date.getTimezoneOffset() * 60 * 1000));
+  d = new Date(d - (d.getTimezoneOffset() * 60 * 1000));
   // Redefine that date again, but at midnight
   d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
   // Set the day to the nearest Thursday (current date + 4 - current day number)
