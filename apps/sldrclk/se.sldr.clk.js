@@ -34,9 +34,14 @@ function getUTCTime(d) {
 }
 
 function getWeekNumber(d) {
-  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  var yearStart = newDate(Date.UTC(d.getUTCFullYear(),0,1));
+  // Define a new date that's in UTC
+  d = new Date(d - (Date.getTimezoneOffset() * 60 * 1000));
+  // Redefine that date again, but at midnight
+  d = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  // Set the day to the nearest Thursday (current date + 4 - current day number)
+  d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+  // Define the start of the year
+  var yearStart = new Date(d.getFullYear(),0,1);
   var weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
   return weekNo;
 }
