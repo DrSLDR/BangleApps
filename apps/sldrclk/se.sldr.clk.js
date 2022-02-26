@@ -165,6 +165,7 @@ function drawSimpleClock() {
 
   // draw gmt
   var gmt = da[5];
+  gmt.replace("GMT", "UTC");
   g.setFont(font, smallFontSize);
   g.drawString(gmt, xyCenter, yposGMT, true);
 }
