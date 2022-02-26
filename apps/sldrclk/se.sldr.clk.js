@@ -165,9 +165,8 @@ function drawSimpleClock() {
 
   // draw gmt
   var gmt = da[5];
-  gmt.replace("GMT", "UTC");
   g.setFont(font, smallFontSize);
-  g.drawString(gmt, xyCenter, yposGMT, true);
+  g.drawString(gmt.replace("GMT", "UTC"), xyCenter, yposGMT, true);
 }
 
 // handle switch display on by pressing BTN1
