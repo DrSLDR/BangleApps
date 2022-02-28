@@ -5,3 +5,4 @@
 0.05: Added percent of day and year values
 0.06: Replaced GMT with UTC
 0.07: Added decimal precision to PoD and PoY
+0.08: Formatting

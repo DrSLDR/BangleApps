@@ -11,8 +11,9 @@ const yposTime = 50;
 const yposDate = big ? 85 : 75;
 const yposTst = big ? 115 : 95;
 const yposDml = big ? 170 : 130;
-const yposDayMonth = big ? 195 : 140;
-const yposGMT = big ? 220 : 150;
+const yposPoD = big ? 195 : 140;
+const yposMoon = big ? 220 : 150;
+const yposUTC = big ? 245 : 160;
 
 const moonPeriod = 29.53;
 const moonTime = [
@@ -171,14 +172,18 @@ function drawSimpleClock() {
   g.setFont(font, smallFontSize);
   g.drawString(`d:${locale.dow(d, true)} md:${dom} w:${getWeekNumber(d)}`, xyCenter, yposDml, true);
 
-  // Draw phase of the moon, percent passed of day and year
+  // Draw percent passed of day and year
   g.setFont(font, smallFontSize);
-  g.drawString(`m:${getMoonPhase(d)} pod:${getPoD(d)}% poy:${getPoY(d)}%`, xyCenter, yposDayMonth, true);
+  g.drawString(`pod:${getPoD(d)}% poy:${getPoY(d)}%`, xyCenter, yposPoD, true);
+
+  // Draw phase of the moon
+  g.setFont(font, smallFontSize);
+  g.drawString(`m:${getMoonPhase(d)}`, xyCenter, yposMoon, true);
 
   // draw gmt
   var gmt = da[5];
   g.setFont(font, smallFontSize);
-  g.drawString(gmt.replace("GMT", "UTC"), xyCenter, yposGMT, true);
+  g.drawString(gmt.replace("GMT", "UTC"), xyCenter, yposUTC, true);
 }
 
 // handle switch display on by pressing BTN1
