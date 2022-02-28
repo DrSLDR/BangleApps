@@ -84,7 +84,13 @@ function getMoonPhase(d) {
 function getPoD(d) {
   // We can safely assume a day is 24 hours
   var startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  return Math.round((d - startOfDay) / (10 * 60 * 60 * 24));
+  var pod = Math.round((d - startOfDay) / (60 * 60 * 24));
+  var spod = pod.toString();
+  if (pod < 100) {
+    spod = "0" + spod;
+  }
+  spod = spod.substring(0,2) + "." + spod[2];
+  return spod;
 }
 
 function getPoY(d) {
@@ -92,7 +98,13 @@ function getPoY(d) {
   var startOfYear = new Date(d.getFullYear(), 0, 1);
   var endOfYear = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
   var lengthOfYear = endOfYear - startOfYear;
-  return Math.round(((d - startOfYear) * 100) / lengthOfYear);
+  var poy = Math.round(((d - startOfYear) * 1000) / lengthOfYear);
+  var spoy = poy.toString();
+  if (poy < 100) {
+    spoy = "0" + spoy;
+  }
+  spoy = spoy.substring(0,2) + "." + spoy[2];
+  return spoy;
 }
 
 function drawSimpleClock() {
