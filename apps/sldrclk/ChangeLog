@@ -6,3 +6,4 @@
 0.06: Replaced GMT with UTC
 0.07: Added decimal precision to PoD and PoY
 0.08: Formatting
+0.09: Bugfixed PoD and PoY representations

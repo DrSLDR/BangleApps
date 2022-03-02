@@ -87,8 +87,9 @@ function getPoD(d) {
   var startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
   var pod = Math.round((d - startOfDay) / (60 * 60 * 24));
   var spod = pod.toString();
-  if (pod < 100) {
+  while(pod < 100){
     spod = "0" + spod;
+    pod *= 10;
   }
   spod = spod.substring(0,2) + "." + spod[2];
   return spod;
@@ -101,8 +102,9 @@ function getPoY(d) {
   var lengthOfYear = endOfYear - startOfYear;
   var poy = Math.round(((d - startOfYear) * 1000) / lengthOfYear);
   var spoy = poy.toString();
-  if (poy < 100) {
+  while (poy < 100) {
     spoy = "0" + spoy;
+    poy *= 10;
   }
   spoy = spoy.substring(0,2) + "." + spoy[2];
   return spoy;

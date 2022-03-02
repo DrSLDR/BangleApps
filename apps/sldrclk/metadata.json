@@ -1,7 +1,7 @@
 {
   "id": "sldrclk",
   "name": "SLDR Clock",
-  "version": "0.08",
+  "version": "0.09",
   "description": "A fork of Dev Clock with less useful features",
   "icon": "se.sldr.clk.png",
   "type": "clock",
