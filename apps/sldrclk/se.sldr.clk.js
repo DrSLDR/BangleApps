@@ -82,22 +82,22 @@ function getMoonPhase(d) {
   return phase;
 }
 
-function format2d1f(n){
+function format2d1f(n) {
   s = n.toString();
-  if (n < 10){
+  if (n < 10) {
     s = "00" + s;
   }
   else if (n < 100) {
     s = "0" + s;
   }
-  s = s.substring(0,2) + "." + s[2];
+  s = s.substring(0, 2) + "." + s[2];
   return s
 }
 
 function getPoD(d) {
   // We can safely assume a day is 24 hours
   var startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  var pod = Math.round((d - startOfDay) / (60 * 60 * 24));
+  var pod = Math.floor((d - startOfDay) / (60 * 60 * 24));
   return format2d1f(pod);
 }
 
@@ -106,7 +106,7 @@ function getPoY(d) {
   var startOfYear = new Date(d.getFullYear(), 0, 1);
   var endOfYear = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
   var lengthOfYear = endOfYear - startOfYear;
-  var poy = Math.round(((d - startOfYear) * 1000) / lengthOfYear);
+  var poy = Math.floor(((d - startOfYear) * 1000) / lengthOfYear);
   return format2d1f(poy);
 }
 
