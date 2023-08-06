@@ -11,9 +11,14 @@ require("Font5x7Numeric7Seg").add(Graphics);
 
 // Positioning blocks
 // Bangle 2 viewport is 176x176
-const slowClockPos = [46, 77];
-const fastClockPos = [116, 88];
-const datePos = [63, 70]; // element is 50x7
+const dmax = 176
+const padding = 4;
+// The slow clock sits dead center on the vertical axis and acts as the layout root
+const slowClockPos = [(dmax - 70 - 14) / 2, (dmax - 22) / 2]; // element is 70x22
+const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
+const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
+
+console.log([slowClockPos, fastClockPos, datePos]);
 
 // Create minute ticker
 var minute = 0;
