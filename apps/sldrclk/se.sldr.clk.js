@@ -1,4 +1,4 @@
-var locale = require("locale");
+//var locale = require("locale");
 /* jshint esversion: 6 */
 
 /* Preamble */
@@ -97,13 +97,6 @@ Bangle.setUI("clock");
 // Finally, init and draw all.
 drawAll();
 
-
-// const big = g.getWidth() > 200;
-// const timeFontSize = big ? 4 : 3;
-// const dateFontSize = big ? 3 : 2;
-// const smallFontSize = big ? 2 : 1;
-// const font = "6x8";
-
 // const xyCenter = g.getWidth() / 2;
 // const yposTime = 50;
 // const yposDate = big ? 85 : 75;
@@ -125,9 +118,6 @@ drawAll();
 //   (moonPeriod - 0.5)
 // ];
 // const fixMoon = new Date(2020, 02, 24, 09, 28, 0);
-
-// // Check settings for what type our clock should be
-// var is12Hour = (require("Storage").readJSON("setting.json", 1) || {})["12hour"];
 
 // function getUTCTime(d) {
 //   return d.toUTCString().split(' ')[4].split(':').map(function (d) { return Number(d) });
@@ -214,36 +204,6 @@ drawAll();
 //   var da = d.toString().split(" ");
 //   var dutc = getUTCTime(d);
 
-//   g.reset(); // default draw styles
-//   // drawSting centered
-//   g.setFontAlign(0, 0);
-
-//   // draw time
-//   var time = da[4].split(":");
-//   var hours = time[0],
-//     minutes = time[1],
-//     seconds = time[2];
-
-//   var meridian = "";
-//   if (is12Hour) {
-//     hours = parseInt(hours, 10);
-//     meridian = "AM";
-//     if (hours == 0) {
-//       hours = 12;
-//       meridian = "AM";
-//     } else if (hours >= 12) {
-//       meridian = "PM";
-//       if (hours > 12) hours -= 12;
-//     }
-//     hours = (" " + hours).substr(-2);
-//   }
-
-//   // Time
-//   g.setFont(font, timeFontSize);
-//   g.drawString(`${hours}:${minutes}:${seconds}`, xyCenter, yposTime, true);
-//   g.setFont(font, smallFontSize);
-//   g.drawString(meridian, xyCenter + 102, yposTime + 10, true);
-
 //   // Derive datestrings
 //   var month = d.getMonth() + 1;
 //   var sMonth = month.toString();
@@ -285,21 +245,3 @@ drawAll();
 //   g.setFont(font, smallFontSize);
 //   g.drawString(gmt.replace("GMT", "UTC"), xyCenter, yposUTC, true);
 // }
-
-// // handle switch display on by pressing BTN1
-// Bangle.on('lcdPower', function (on) {
-//   if (on) drawSimpleClock();
-// });
-
-// // clean app screen
-// g.clear();
-// // Show launcher when button pressed
-// Bangle.setUI("clock");
-// Bangle.loadWidgets();
-// Bangle.drawWidgets();
-
-// // refesh every 500 milliseconds
-// setInterval(drawSimpleClock, 500);
-
-// // draw now
-// drawSimpleClock();
