@@ -24,6 +24,20 @@ console.log([slowClockPos, fastClockPos, datePos, timestampPos]);
 // Create minute ticker
 var minute = 0;
 
+// TODO
+// UTC timezone
+// Weekday
+// Days in Month
+// Week number
+// Percent of Day
+// Percent of Year
+// Moon cycle
+// Battery status
+// Connection status
+// Temperature
+// Heart rate
+// Wind (Direction and speed)
+
 /* Business logic block */
 
 function drawSlowClock(d) {
@@ -131,15 +145,6 @@ Bangle.setUI("clock");
 // Finally, init and draw all.
 drawAll();
 
-// const xyCenter = g.getWidth() / 2;
-// const yposTime = 50;
-// const yposDate = big ? 85 : 75;
-// const yposTst = big ? 115 : 95;
-// const yposDml = big ? 170 : 130;
-// const yposPoD = big ? 195 : 140;
-// const yposMoon = big ? 220 : 150;
-// const yposUTC = big ? 245 : 160;
-
 // const moonPeriod = 29.53;
 // const moonTime = [
 //   0.5,
@@ -237,27 +242,6 @@ drawAll();
 //   var d = new Date();
 //   var da = d.toString().split(" ");
 //   var dutc = getUTCTime(d);
-
-//   // Derive datestrings
-//   var month = d.getMonth() + 1;
-//   var sMonth = month.toString();
-//   if (month < 10) {
-//     sMonth = "0" + sMonth;
-//   }
-//   var day = d.getDate();
-//   var sDay = day.toString();
-//   if (day < 10) {
-//     sDay = "0" + sDay;
-//   }
-
-//   // Date String
-//   g.setFont(font, dateFontSize);
-//   g.drawString(`${d.getFullYear()}-${sMonth}-${sDay}`, xyCenter, yposDate, true);
-
-//   // Timestamp
-//   var tst = Math.floor(d.getTime() / 1000);
-//   g.setFont(font, smallFontSize);
-//   g.drawString(`tst:${tst}`, xyCenter, yposTst, true);
 
 //   //Days in month
 //   var dom = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
