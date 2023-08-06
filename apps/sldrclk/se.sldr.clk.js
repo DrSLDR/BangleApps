@@ -8,6 +8,8 @@ const mainTimeFont = "7x11Numeric7Seg";
 require("Font7x11Numeric7Seg").add(Graphics);
 const extraTimeFont = "5x7Numeric7Seg";
 require("Font5x7Numeric7Seg").add(Graphics);
+const mainOtherFont = "6x8";
+const extraOtherFont = "4x6";
 
 // Positioning blocks
 // Bangle 2 viewport is 176x176
@@ -18,8 +20,9 @@ const slowClockPos = [(dmax - 70 - 14) / 2, (dmax - 22) / 2]; // element is 70x2
 const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
 const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
+const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
 
-console.log([slowClockPos, fastClockPos, datePos, timestampPos]);
+console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos]);
 
 // Create minute ticker
 var minute = 0;
@@ -86,6 +89,16 @@ function drawTimestamp(d) {
   g.drawString(time, timestampPos[0], timestampPos[1], true);
 }
 
+function drawTZ(d) {
+  // Time math
+  var time = d.toString().split(" ").reverse()[0].replace("GMT", "UTC");
+  // Reset the graphics
+  g.reset();
+  // Draw the time
+  g.setFont(mainOtherFont);
+  g.drawString(time, tzPos[0], tzPos[1], true);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -96,6 +109,7 @@ function drawFast(d) {
 function drawSlow(d) {
   drawSlowClock(d);
   drawDate(d);
+  drawTZ(d);
 }
 
 function drawLoop() {
