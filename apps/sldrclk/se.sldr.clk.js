@@ -28,7 +28,6 @@ console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos]);
 var minute = 0;
 
 // TODO
-// UTC timezone
 // Weekday
 // Days in Month
 // Week number
@@ -271,9 +270,4 @@ drawAll();
 //   // Draw phase of the moon
 //   g.setFont(font, smallFontSize);
 //   g.drawString(`m:${getMoonPhase(d)}`, xyCenter, yposMoon, true);
-
-//   // draw gmt
-//   var gmt = da[5];
-//   g.setFont(font, smallFontSize);
-//   g.drawString(gmt.replace("GMT", "UTC"), xyCenter, yposUTC, true);
 // }
