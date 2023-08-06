@@ -13,11 +13,13 @@ require("Font5x7Numeric7Seg").add(Graphics);
 // Bangle 2 viewport is 176x176
 const slowClockPos = [10, 10];
 
+// Create minute ticker
+var minute = 0;
+
 /* Business logic block */
 
-function drawSlowClock() {
+function drawSlowClock(d) {
   // Time math
-  var d = new Date();
   var h = d.getHours(), m = d.getMinutes();
   var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
   // Reset the graphics
@@ -29,8 +31,32 @@ function drawSlowClock() {
 
 /* Battery economy block */
 
+function drawFast(d) {
+
+}
+
+function drawSlow(d) {
+  drawSlowClock(d);
+}
+
+function drawLoop() {
+  // Time math
+  var d = new Date();
+  var m = d.getMinutes();
+  // Check if we should update the slow elements
+  if (m != minute) {
+    minute = m;
+    drawSlow(d);
+  }
+  // Update the fast elements
+  drawFast(d);
+}
+
+// Short circuit time magic for initialization
 function drawAll() {
-  drawSlowClock();
+  var d = new Date();
+  drawSlow(d);
+  drawFast(d);
 }
 
 /* Clock integration block */
@@ -38,9 +64,18 @@ function drawAll() {
 // Clear the screen on load
 g.clear();
 
+// Create the main timer
+var timer = setInterval(drawLoop, 500);
+
 // Handle the LCD being off
 Bangle.on('lcdPower', on => {
+  // Destroy and reset the timer if it exists
+  if (timer) {
+    clearInterval(timer);
+    timer = undefined;
+  }
   if (on) {
+    timer = setInterval(drawLoop, 500);
     drawAll();
   }
 });
