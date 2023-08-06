@@ -17,6 +17,7 @@ const padding = 4;
 const slowClockPos = [(dmax - 70 - 14) / 2, (dmax - 22) / 2]; // element is 70x22
 const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
+const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
 
 console.log([slowClockPos, fastClockPos, datePos]);
 
@@ -59,10 +60,22 @@ function drawDate(d) {
   g.drawString(time, datePos[0], datePos[1], true);
 }
 
+function drawTimestamp(d) {
+  // Time math
+  var t = Math.floor(d.getTime() / 1000);
+  var time = t.toString();
+  // Reset the graphics
+  g.reset();
+  // Draw the time
+  g.setFont(extraTimeFont);
+  g.drawString(time, timestampPos[0], timestampPos[1], true);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
   drawFastClock(d);
+  drawTimestamp(d);
 }
 
 function drawSlow(d) {
