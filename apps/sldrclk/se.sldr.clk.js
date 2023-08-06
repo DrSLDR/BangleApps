@@ -39,12 +39,13 @@ function drawSlowClock(d) {
 
 function drawFastClock(d) {
   // Time math
-  var s = d.getSeconds().toString().padStart(2, 0);
+  var s = d.getSeconds();
+  var time = s.toString().padStart(2, 0)
   // Reset the graphics
   g.reset();
   // Draw the time
   g.setFont(mainTimeFont);
-  g.drawString(s, fastClockPos[0], fastClockPos[1], true);
+  g.drawString(time, fastClockPos[0], fastClockPos[1], true);
 }
 
 function drawDate(d) {
