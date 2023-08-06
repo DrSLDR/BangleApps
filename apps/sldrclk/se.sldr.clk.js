@@ -1,5 +1,57 @@
 var locale = require("locale");
 /* jshint esversion: 6 */
+
+/* Preamble */
+
+// Load fonts
+const mainTimeFont = "7x11Numeric7Seg";
+require("Font7x11Numeric7Seg").add(Graphics);
+const extraTimeFont = "5x7Numeric7Seg";
+require("Font5x7Numeric7Seg").add(Graphics);
+
+// Positioning blocks
+// Bangle 2 viewport is 176x176
+const slowClockPos = [10, 10];
+
+/* Business logic block */
+
+function drawSlowClock() {
+  // Time math
+  var d = new Date();
+  var h = d.getHours(), m = d.getMinutes();
+  var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
+  // Reset the graphics
+  g.reset();
+  // Draw the time
+  g.setFont(mainTimeFont, 2);
+  g.drawString(time, slowClockPos[0], slowClockPos[1], true);
+}
+
+/* Battery economy block */
+
+function drawAll() {
+  drawSlowClock();
+}
+
+/* Clock integration block */
+
+// Clear the screen on load
+g.clear();
+
+// Handle the LCD being off
+Bangle.on('lcdPower', on => {
+  if (on) {
+    drawAll();
+  }
+});
+
+// Define ourselves as a clock
+Bangle.setUI("clock");
+
+// Finally, init and draw all.
+drawAll();
+
+
 // const big = g.getWidth() > 200;
 // const timeFontSize = big ? 4 : 3;
 // const dateFontSize = big ? 3 : 2;
