@@ -12,6 +12,7 @@ require("Font5x7Numeric7Seg").add(Graphics);
 // Positioning blocks
 // Bangle 2 viewport is 176x176
 const slowClockPos = [10, 10];
+const fastClockPos = [10, 60];
 
 // Create minute ticker
 var minute = 0;
@@ -29,10 +30,20 @@ function drawSlowClock(d) {
   g.drawString(time, slowClockPos[0], slowClockPos[1], true);
 }
 
+function drawFastClock(d) {
+  // Time math
+  var s = d.getSeconds().toString().padStart(2, 0);
+  // Reset the graphics
+  g.reset();
+  // Draw the time
+  g.setFont(mainTimeFont);
+  g.drawString(s, fastClockPos[0], fastClockPos[1], true);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
-
+  drawFastClock(d);
 }
 
 function drawSlow(d) {
