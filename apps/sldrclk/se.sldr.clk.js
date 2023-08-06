@@ -19,7 +19,7 @@ const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
 const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
 
-console.log([slowClockPos, fastClockPos, datePos]);
+console.log([slowClockPos, fastClockPos, datePos, timestampPos]);
 
 // Create minute ticker
 var minute = 0;
