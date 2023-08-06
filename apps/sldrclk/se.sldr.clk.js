@@ -11,8 +11,8 @@ require("Font5x7Numeric7Seg").add(Graphics);
 
 // Positioning blocks
 // Bangle 2 viewport is 176x176
-const slowClockPos = [10, 10];
-const fastClockPos = [10, 60];
+const slowClockPos = [46, 77];
+const fastClockPos = [116, 88];
 
 // Create minute ticker
 var minute = 0;
