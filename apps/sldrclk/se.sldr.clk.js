@@ -117,6 +117,7 @@ function drawLoop() {
   var m = d.getMinutes();
   // Check if we should update the slow elements
   if (m != minute) {
+    console.log("Doing slow updates!");
     minute = m;
     drawSlow(d);
   }
