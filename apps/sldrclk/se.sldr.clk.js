@@ -25,8 +25,13 @@ const slowClockCfg = {
   }
 };
 const fastClockCfg = {
-  font: "7x11Numeric7Seg",
-  scale: 1
+  element: {
+    main: {
+      font: "7x11Numeric7Seg",
+      scale: 1,
+      template: "00"
+    }
+  }
 };
 const iso8601Cfg = {
   font: "5x7Numeric7Seg",
@@ -67,6 +72,7 @@ var deriveAllXSizes = function (cfg) {
 };
 
 deriveAllXSizes(slowClockCfg);
+deriveAllXSizes(fastClockCfg);
 
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
 iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
@@ -109,6 +115,7 @@ var deriveAllPositions = function (cfg) {
 }
 
 deriveAllPositions(slowClockCfg);
+deriveAllPositions(fastClockCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -185,7 +192,7 @@ function drawSlowClock(d) {
 function drawFastClock(d) {
   var s = d.getSeconds();
   var time = s.toString().padStart(2, 0)
-  generalDraw(time, fastClockCfg);
+  drawComponent({ main: time }, fastClockCfg);
 }
 
 function drawISO8601(d) {
