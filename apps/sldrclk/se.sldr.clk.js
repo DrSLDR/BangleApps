@@ -65,7 +65,12 @@ timestampCfg.pos = {
 };
 
 console.log("Configurations: " +
-  [slowClockCfg, fastClockCfg, iso8601Cfg].map((x) => JSON.stringify(x, null, 2)));
+  JSON.stringify({
+    slowClock: slowClockCfg,
+    fastClock: fastClockCfg,
+    iso8601: iso8601Cfg,
+    timestamp: timestampCfg
+  }, null, 2));
 
 // The slow clock sits dead center on the vertical axis and acts as the layout root
 const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
@@ -129,7 +134,6 @@ function drawFastClock(d) {
 }
 
 function drawISO8601(d) {
-  // Time math
   var y = d.getFullYear();
   var m = d.getMonth();
   var a = d.getDate();
