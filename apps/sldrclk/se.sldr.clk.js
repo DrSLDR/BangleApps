@@ -174,9 +174,31 @@ const weatherConf = {
     t: {
       font: "6x8",
       scale: 1,
-      template: "-00 (000)",
+      template: "-00C(000)",
       xNudge: -padding
-    }
+    },
+    wH: {
+      font: "4x6",
+      scale: 1,
+      template: "W:"
+    },
+    w: {
+      font: "6x8",
+      scale: 1,
+      template: "00.0[XXX]",
+      xNudge: -padding
+    },
+    hH: {
+      font: "4x6",
+      scale: 1,
+      template: "H:"
+    },
+    h: {
+      font: "6x8",
+      scale: 1,
+      template: "000%",
+      xNudge: -padding
+    },
   }
 }
 
@@ -319,8 +341,6 @@ function renderPercent(v) {
 
 // TODO
 // Moon cycle
-// Temperature
-// Wind (Direction and speed)
 // Variable abstraction
 
 /* Main drawing block */
@@ -441,14 +461,27 @@ function drawWeather() {
     s += (tempC < 0) ? "-" : " ";
     var c = Math.abs(tempC);
     s += c.toString().padStart(2, 0);
-    s += " [" + tempK + "]";
+    s += "C[" + tempK + "]";
     return s;
   })();
+  var windSpeed = (weather.wind * 1609.344 / 3600).toFixed(1);
+  var windAngle = weather.wdir;
+  var windRose = [
+    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+    'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'
+  ][Math.floor((windAngle + 11.25) / 22.5)];
+  var windString = windSpeed.padStart(4, 0) + "[" + windRose + "]";
+  var humidity = weather.hum;
+  var humidityString = humidity.toString().padStart(2, 0).padStart(3, " ") + "%";
 
   drawComponent(
     {
       tH: weatherConf.element.tH.template,
-      t: tempString
+      t: tempString,
+      wH: weatherConf.element.wH.template,
+      w: windString,
+      hH: weatherConf.element.hH.template,
+      h: humidityString
     },
     weatherConf
   );
