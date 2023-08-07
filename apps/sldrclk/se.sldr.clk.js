@@ -31,6 +31,10 @@ const timestampCfg = {
   font: "5x7Numeric7Seg",
   scale: 1
 }
+const timezoneCfg = {
+  font: "6x8",
+  scale: 1
+}
 
 // Sizing math - it got too annoying to do by hand
 function deriveSize(cfg, str) {
@@ -44,6 +48,7 @@ slowClockCfg.size = deriveSize(slowClockCfg, "00:00");
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
 iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
 timestampCfg.size = deriveSize(timestampCfg, "0000000000");
+timezoneCfg.size = deriveSize(timezoneCfg, "UTC+0000");
 
 // Positioning math
 slowClockCfg.pos = {
@@ -62,21 +67,19 @@ timestampCfg.pos = {
   x: (dmax - timestampCfg.size.x) / 2,
   y: slowClockCfg.pos.y + slowClockCfg.size.y + padding,
 };
+timezoneCfg.pos = {
+  x: (dmax - timezoneCfg.size.x) / 2,
+  y: dmax - padding - timezoneCfg.size.y
+}
 
 console.log("Configurations: " +
   JSON.stringify({
     slowClock: slowClockCfg,
     fastClock: fastClockCfg,
     iso8601: iso8601Cfg,
-    timestamp: timestampCfg
+    timestamp: timestampCfg,
+    timezone: timezoneCfg
   }, null, 2));
-
-// The slow clock sits dead center on the vertical axis and acts as the layout root
-const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
-const percentLinePos = [49, tzPos[1] - padding - 8]; // element is ?x8
-const dateLinePos = [49, percentLinePos[1] - padding - 8]; // element is 78x8
-
-console.log([tzPos, percentLinePos, dateLinePos]);
 
 // Create minute ticker
 var minute = 0;
@@ -148,13 +151,8 @@ function drawTimestamp(d) {
 }
 
 function drawTZ(d) {
-  // Time math
   var time = d.toString().split(" ").reverse()[0].replace("GMT", "UTC");
-  // Reset the graphics
-  g.reset();
-  // Draw the time
-  g.setFont(mainOtherFont);
-  g.drawString(time, tzPos[0], tzPos[1], true);
+  generalDraw(time, timezoneCfg);
 }
 
 function drawDateLine(d) {
@@ -230,7 +228,7 @@ function drawFast(d) {
 function drawSlow(d) {
   drawSlowClock(d);
   drawISO8601(d);
-  // drawTZ(d);
+  drawTZ(d);
   // drawDateLine(d);
   // drawPercentLine(d);
 }
