@@ -24,7 +24,7 @@ const slowClockCfg = {
   element: {
     main: {
       font: "7x11Numeric7Seg",
-      scale: 2,
+      scale: 3,
       template: "00:00"
     }
   }
@@ -33,7 +33,7 @@ const fastClockCfg = {
   element: {
     main: {
       font: "7x11Numeric7Seg",
-      scale: 1,
+      scale: 2,
       template: "00"
     }
   }
@@ -42,7 +42,7 @@ const iso8601Cfg = {
   element: {
     main: {
       font: "5x7Numeric7Seg",
-      scale: 1,
+      scale: 2,
       template: "0000-00-00"
     }
   }
@@ -50,7 +50,7 @@ const iso8601Cfg = {
 const timestampCfg = {
   element: {
     main: {
-      font: "5x7Numeric7Seg",
+      font: "7x11Numeric7Seg",
       scale: 1,
       template: "0000000000"
     }
