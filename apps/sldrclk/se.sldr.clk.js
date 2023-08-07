@@ -103,6 +103,8 @@ var deriveAllPositions = function (cfg) {
     var y = cfg.pos.y;
     if (cfg.element[k].size.y < cfg.size.y) y += (cfg.size.y - cfg.element[k].size.y);
     cfg.element[k].pos = { x: x, y: y };
+    x += cfg.element[k].size.x;
+    element += 1;
   }
 }
 
