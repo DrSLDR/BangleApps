@@ -1,8 +1,8 @@
 {
   "id": "sldrclk",
   "name": "SLDR Clock",
-  "version": "0.11",
-  "description": "A fork of Dev Clock with less useful features",
+  "version": "0.12",
+  "description": "An information-packed watchface, by a nerd, for nerds",
   "icon": "se.sldr.clk.png",
   "type": "clock",
   "tags": "clock",

@@ -9,3 +9,4 @@
 0.09: Bugfixed PoD and PoY representations
 0.10: Bugfixed infinite loop
 0.11: Flooring PoD/PoY percentages
+0.12: Complete rewrite - better layout, more features, nicer on the battery.
