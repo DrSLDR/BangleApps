@@ -82,6 +82,40 @@ const pLineCfg = {
     },
   }
 }
+const dateInfoCfg = {
+  element: {
+    dH: {
+      font: "4x6",
+      scale: 1,
+      template: "D:"
+    },
+    d: {
+      font: "6x8",
+      scale: 1,
+      template: "MON"
+    },
+    mdH: {
+      font: "4x6",
+      scale: 1,
+      template: "MD:"
+    },
+    md: {
+      font: "6x8",
+      scale: 1,
+      template: "31"
+    },
+    wH: {
+      font: "4x6",
+      scale: 1,
+      template: "W:"
+    },
+    w: {
+      font: "6x8",
+      scale: 1,
+      template: "00"
+    },
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -108,6 +142,7 @@ deriveAllXSizes(iso8601Cfg);
 deriveAllXSizes(timestampCfg);
 deriveAllXSizes(timezoneCfg);
 deriveAllXSizes(pLineCfg);
+deriveAllXSizes(dateInfoCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -134,6 +169,10 @@ pLineCfg.pos = {
   x: (dmax - pLineCfg.size.x) / 2,
   y: timezoneCfg.pos.y - padding - pLineCfg.size.y,
 }
+dateInfoCfg.pos = {
+  x: (dmax - dateInfoCfg.size.x) / 2,
+  y: pLineCfg.pos.y - padding - dateInfoCfg.size.y
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -154,6 +193,7 @@ deriveAllPositions(iso8601Cfg);
 deriveAllPositions(timestampCfg);
 deriveAllPositions(timezoneCfg);
 deriveAllPositions(pLineCfg);
+deriveAllPositions(dateInfoCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -162,7 +202,8 @@ console.log("Configurations: " +
     iso8601: iso8601Cfg,
     timestamp: timestampCfg,
     timezone: timezoneCfg,
-    pLine: pLineCfg
+    pLine: pLineCfg,
+    dateInfo: dateInfoCfg
   }, null, 2));
 
 // Create minute ticker
@@ -246,37 +287,19 @@ function drawTZ(d) {
   drawComponent({ main: time }, timezoneCfg);
 }
 
-function drawDateLine(d) {
-  // Time math
+function drawDateInfoLine(d) {
   var day = d.toString().split(" ")[0].toUpperCase();
   var dom = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
   var week = calcWeekNo(d).toString().padStart(2, 0);
-  // Reset the graphics
-  g.reset();
-  // Draw the day header (8x6)
-  g.setFont(extraOtherFont);
-  var x = dateLinePos[0], y = dateLinePos[1] + 2;
-  g.drawString("D:", x, y, true);
-  // Draw the day (18x8)
-  x += 8, y -= 2;
-  g.setFont(mainOtherFont);
-  g.drawString(day, x, y, true);
-  // Draw the days in month header (12x6)
-  x += (padding + 18), y += 2;
-  g.setFont(extraOtherFont);
-  g.drawString("MD:", x, y, true);
-  // Draw the days in month (12x8)
-  x += 12, y -= 2;
-  g.setFont(mainOtherFont);
-  g.drawString(dom, x, y, true);
-  // Draw the week header (8x6)
-  x += (padding + 12), y += 2;
-  g.setFont(extraOtherFont);
-  g.drawString("W:", x, y, true);
-  // Draw the week number (12x8)
-  x += 8, y -= 2;
-  g.setFont(mainOtherFont);
-  g.drawString(week, x, y, true);
+  drawComponent(
+    {
+      dH: dateInfoCfg.element.dH.template,
+      d: day,
+      mdH: dateInfoCfg.element.mdH.template,
+      md: dom,
+      wH: dateInfoCfg.element.wH.template,
+      w: week
+    }, dateInfoCfg);
 }
 
 function drawPercentLine(d) {
@@ -308,7 +331,7 @@ function drawSlow(d) {
   drawSlowClock(d);
   drawISO8601(d);
   drawTZ(d);
-  // drawDateLine(d);
+  drawDateInfoLine(d);
   drawPercentLine(d);
 }
 
