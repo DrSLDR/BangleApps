@@ -10,6 +10,10 @@ const storage = require("Storage");
 require("Font7x11Numeric7Seg").add(Graphics);
 require("Font5x7Numeric7Seg").add(Graphics);
 
+// Moon math
+const lunation = (29 * 1440) + (12 * 60) + 44;
+const knownNew = new Date("2022-01-02T19:33:00");
+
 // Positioning blocks
 // Bangle 2 viewport is 176x176
 const dmax = 176;
@@ -362,7 +366,6 @@ function renderPercent(v) {
 }
 
 // TODO
-// Moon cycle
 // Variable abstraction
 
 /* Main drawing block */
@@ -510,8 +513,38 @@ function drawWeather() {
 }
 
 function drawMoon(d) {
+  // Get millisecond difference between now and the known new moon, divide that down to
+  // minutes, then into cycles.
+  var cycle = (((d.getTime() - knownNew.getTime()) / 60000) / lunation);
+  // Extract the decimal component, and multiply back to get minutes since the last new
+  // moon.
+  var lunationFrac = (cycle % 1);
+  var minSinceNew = lunationFrac * lunation;
+  console.log("Period: " + minSinceNew);
+  console.log("Lunation fraction: " + lunationFrac);
+  // Calculate sinusoidal point of the cycle
+  var sineMoon = ((-1 * Math.cos(lunationFrac * Math.PI * 2)) + 1) / 2;
+  console.log("Sine moon: " + sineMoon);
+  // Permil of cycle
+  var cyclePermil = Math.round(sineMoon * 1000);
+  var moonPercent = renderPercent(cyclePermil);
+  // Set the descriptor
+  var descriptor = "NEW";
+  if ((lunationFrac > 0.025 && lunationFrac < 0.225) ||
+    (lunationFrac > 0.275 && lunationFrac < 0.475)) {
+    descriptor = "WAX";
+  } else if (lunationFrac >= 0.225 && lunationFrac <= 0.275) {
+    descriptor = "Q:1";
+  } else if (lunationFrac >= 0.475 && lunationFrac <= 0.525) {
+    descriptor = " F ";
+  } else if ((lunationFrac > 0.525 && lunationFrac < 0.725) ||
+    (lunationFrac > 0.775 && lunationFrac < 0.975)) {
+    descriptor = "WAN";
+  } else if (lunationFrac >= 0.725 && lunationFrac <= 0.775) {
+    descriptor = "Q:3";
+  }
 
-  var moon = "00.0%[NEW]"
+  var moon = moonPercent + "[" + descriptor + "]";
 
   drawComponent({ moonH: moonCfg.element.moonH.template, moon: moon }, moonCfg);
 }
