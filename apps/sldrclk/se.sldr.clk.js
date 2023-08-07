@@ -14,10 +14,15 @@ const extraOtherFont = "4x6";
 const dmax = 176
 const padding = 4;
 
-// Element configurations
+// Component configurations
 const slowClockCfg = {
-  font: "7x11Numeric7Seg",
-  scale: 2
+  element: {
+    main: {
+      font: "7x11Numeric7Seg",
+      scale: 2,
+      template: "00:00"
+    }
+  }
 };
 const fastClockCfg = {
   font: "7x11Numeric7Seg",
@@ -44,7 +49,25 @@ function deriveSize(cfg, str) {
   return { x: w, y: h };
 }
 
-slowClockCfg.size = deriveSize(slowClockCfg, "00:00");
+// Calculate the max Y and total X size of a given component. Since only rows will be
+// laid out, the total Y size will just be the largest Y encountered.
+var deriveAllXSizes = function (cfg) {
+  var tx = 0, ty = 0, elements = 0;
+  for (var k of Object.keys(cfg.element)) {
+    g.setFont(cfg.element[k].font, cfg.element[k].scale);
+    var w = g.stringWidth(cfg.element[k].template);
+    var h = g.getFontHeight();
+    tx += w;
+    if (h > ty) ty = h;
+    elements += 1;
+    cfg.element[k].size = { x: w, y: h };
+  }
+  tx += padding * (elements - 1);
+  cfg.size = { x: tx, y: ty };
+};
+
+deriveAllXSizes(slowClockCfg);
+
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
 iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
 timestampCfg.size = deriveSize(timestampCfg, "0000000000");
@@ -71,6 +94,19 @@ timezoneCfg.pos = {
   x: (dmax - timezoneCfg.size.x) / 2,
   y: dmax - padding - timezoneCfg.size.y
 }
+
+// Calculate absolute position of elements
+var deriveAllPositions = function (cfg) {
+  var x = cfg.pos.x, element = 0;
+  for (var k of Object.keys(cfg.element)) {
+    if (element > 0) x += padding;
+    var y = cfg.pos.y;
+    if (cfg.element[k].size.y < cfg.size.y) y += (cfg.size.y - cfg.element[k].size.y);
+    cfg.element[k].pos = { x: x, y: y };
+  }
+}
+
+deriveAllPositions(slowClockCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -116,6 +152,20 @@ function renderPercent(v) {
 
 /* Main drawing block */
 
+var drawString = function (txt, cfg) {
+  // Reset the graphics
+  g.reset();
+  // Draw the time
+  g.setFont(cfg.font, cfg.scale);
+  g.drawString(txt, cfg.pos.x, cfg.pos.y, true);
+}
+
+var drawComponent = function (txts, cfg) {
+  for (var k of Object.keys(cfg.element)) {
+    drawString(txts[k], cfg.element[k]);
+  }
+}
+
 function generalDraw(txt, cfg) {
   // Reset the graphics
   g.reset();
@@ -127,7 +177,7 @@ function generalDraw(txt, cfg) {
 function drawSlowClock(d) {
   var h = d.getHours(), m = d.getMinutes();
   var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
-  generalDraw(time, slowClockCfg);
+  drawComponent({ main: time }, slowClockCfg);
 }
 
 function drawFastClock(d) {
