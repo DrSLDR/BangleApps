@@ -110,6 +110,7 @@ function renderPercent(v) {
 // Temperature
 // Heart rate
 // Wind (Direction and speed)
+// Variable abstraction
 
 /* Main drawing block */
 
