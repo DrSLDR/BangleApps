@@ -5,7 +5,6 @@
 
 // Load fonts
 require("Font7x11Numeric7Seg").add(Graphics);
-const extraTimeFont = "5x7Numeric7Seg";
 require("Font5x7Numeric7Seg").add(Graphics);
 const mainOtherFont = "6x8";
 const extraOtherFont = "4x6";
