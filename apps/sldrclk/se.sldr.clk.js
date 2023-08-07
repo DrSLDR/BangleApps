@@ -4,7 +4,6 @@
 /* Preamble */
 
 // Load fonts
-const mainTimeFont = "7x11Numeric7Seg";
 require("Font7x11Numeric7Seg").add(Graphics);
 const extraTimeFont = "5x7Numeric7Seg";
 require("Font5x7Numeric7Seg").add(Graphics);
@@ -18,11 +17,11 @@ const padding = 4;
 
 // Element configurations
 const slowClockCfg = {
-  font: mainTimeFont,
+  font: "7x11Numeric7Seg",
   scale: 2
 };
 const fastClockCfg = {
-  font: mainTimeFont,
+  font: "7x11Numeric7Seg",
   scale: 1
 };
 
@@ -34,15 +33,15 @@ function deriveSize(cfg, str) {
   return { x: w, y: h };
 }
 
-slowClockCfg["size"] = deriveSize(slowClockCfg, "00000");
-fastClockCfg["size"] = deriveSize(fastClockCfg, "00");
+slowClockCfg.size = deriveSize(slowClockCfg, "00000");
+fastClockCfg.size = deriveSize(fastClockCfg, "00");
 
 // Positioning math
-slowClockCfg["pos"] = {
+slowClockCfg.pos = {
   x: (dmax - slowClockCfg.size.x - fastClockCfg.size.x) / 2,
   y: (dmax - slowClockCfg.size.y) / 2
 };
-fastClockCfg["pos"] = {
+fastClockCfg.pos = {
   x: slowClockCfg.pos.x + slowClockCfg.size.x,
   y: slowClockCfg.pos.y + slowClockCfg.size.y - fastClockCfg.size.y
 };
