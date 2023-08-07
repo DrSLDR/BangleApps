@@ -58,6 +58,20 @@ const timezoneCfg = {
     }
   }
 }
+const pLineCfg = {
+  element: {
+    pOfDH: {
+      font: "4x6",
+      scale: 1,
+      template: "POD:"
+    },
+    pOfD: {
+      font: "6x8",
+      scale: 1,
+      template: "00.0%"
+    }
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -83,6 +97,7 @@ deriveAllXSizes(fastClockCfg);
 deriveAllXSizes(iso8601Cfg);
 deriveAllXSizes(timestampCfg);
 deriveAllXSizes(timezoneCfg);
+deriveAllXSizes(pLineCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -105,6 +120,10 @@ timezoneCfg.pos = {
   x: (dmax - timezoneCfg.size.x) / 2,
   y: dmax - padding - timezoneCfg.size.y
 }
+pLineCfg.pos = {
+  x: (dmax - pLineCfg.size.x) / 2,
+  y: timezoneCfg.pos.y - padding - pLineCfg.size.y,
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -124,6 +143,7 @@ deriveAllPositions(fastClockCfg);
 deriveAllPositions(iso8601Cfg);
 deriveAllPositions(timestampCfg);
 deriveAllPositions(timezoneCfg);
+deriveAllPositions(pLineCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -131,7 +151,8 @@ console.log("Configurations: " +
     fastClock: fastClockCfg,
     iso8601: iso8601Cfg,
     timestamp: timestampCfg,
-    timezone: timezoneCfg
+    timezone: timezoneCfg,
+    pLine: pLineCfg
   }, null, 2));
 
 // Create minute ticker
@@ -248,7 +269,6 @@ function drawDateLine(d) {
 }
 
 function drawPercentLine(d) {
-  // Time math
   var dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
   var fracOfD = Math.floor((d - dayStart) / 86400);
   var pOfD = renderPercent(fracOfD);
@@ -257,24 +277,7 @@ function drawPercentLine(d) {
   var yearLength = yearEnd - yearStart;
   var fracOfY = Math.floor((d - yearStart) * 1000 / yearLength);
   var pOfY = renderPercent(fracOfY);
-  // Reset the graphics
-  g.reset();
-  // Draw the pod header (16x6)
-  g.setFont(extraOtherFont);
-  var x = percentLinePos[0], y = percentLinePos[1] + 2;
-  g.drawString("POD:", x, y, true);
-  // Draw the pod (18x8)
-  x += 16, y -= 2;
-  g.setFont(mainOtherFont);
-  g.drawString(pOfD, x, y, true);
-  // Draw the poy header (16x6)
-  x += (padding + 18), y += 2;
-  g.setFont(extraOtherFont);
-  g.drawString("POY:", x, y, true);
-  // Draw the poy (18x8)
-  x += 16, y -= 2;
-  g.setFont(mainOtherFont);
-  g.drawString(pOfY, x, y, true);
+  drawComponent({ pOfDH: pLineCfg.element.pOfDH.template, pOfD: pOfD }, pLineCfg);
 }
 
 /* Battery economy block */
@@ -289,7 +292,7 @@ function drawSlow(d) {
   drawISO8601(d);
   drawTZ(d);
   // drawDateLine(d);
-  // drawPercentLine(d);
+  drawPercentLine(d);
 }
 
 function drawLoop() {
