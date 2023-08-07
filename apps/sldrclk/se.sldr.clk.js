@@ -197,7 +197,7 @@ function drawFastClock(d) {
 
 function drawISO8601(d) {
   var y = d.getFullYear();
-  var m = d.getMonth();
+  var m = d.getMonth() + 1;
   var a = d.getDate();
   var time = y.toString() + "-" + m.toString().padStart(2, 0) + "-" + a.toString().padStart(2, 0);
   drawComponent({ main: time }, iso8601Cfg);
