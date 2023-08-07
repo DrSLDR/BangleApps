@@ -69,7 +69,17 @@ const pLineCfg = {
       font: "6x8",
       scale: 1,
       template: "00.0%"
-    }
+    },
+    pOfYH: {
+      font: "4x6",
+      scale: 1,
+      template: "POY:"
+    },
+    pOfY: {
+      font: "6x8",
+      scale: 1,
+      template: "00.0%"
+    },
   }
 }
 
@@ -278,7 +288,13 @@ function drawPercentLine(d) {
   var yearLength = yearEnd - yearStart;
   var fracOfY = Math.floor((d - yearStart) * 1000 / yearLength);
   var pOfY = renderPercent(fracOfY);
-  drawComponent({ pOfDH: pLineCfg.element.pOfDH.template, pOfD: pOfD }, pLineCfg);
+  drawComponent(
+    {
+      pOfDH: pLineCfg.element.pOfDH.template,
+      pOfD: pOfD,
+      pOfYH: pLineCfg.element.pOfYH.template,
+      pOfY: pOfY
+    }, pLineCfg);
 }
 
 /* Battery economy block */
