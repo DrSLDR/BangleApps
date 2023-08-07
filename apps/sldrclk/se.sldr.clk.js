@@ -164,6 +164,21 @@ const deviceStatusCfg = {
     }
   }
 }
+const weatherConf = {
+  element: {
+    tH: {
+      font: "4x6",
+      scale: 1,
+      template: "T:"
+    },
+    t: {
+      font: "6x8",
+      scale: 1,
+      template: "000",
+      xNudge: -padding
+    }
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -194,6 +209,7 @@ deriveAllXSizes(pLineCfg);
 deriveAllXSizes(dateInfoCfg);
 deriveAllXSizes(healthCfg);
 deriveAllXSizes(deviceStatusCfg);
+deriveAllXSizes(weatherConf);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -232,6 +248,10 @@ deviceStatusCfg.pos = {
   x: dmax - padding - deviceStatusCfg.size.x,
   y: padding
 }
+weatherConf.pos = {
+  x: (dmax - weatherConf.size.x) / 2,
+  y: deviceStatusCfg.pos.y + deviceStatusCfg.size.y + padding,
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -256,6 +276,7 @@ deriveAllPositions(pLineCfg);
 deriveAllPositions(dateInfoCfg);
 deriveAllPositions(healthCfg);
 deriveAllPositions(deviceStatusCfg);
+deriveAllPositions(weatherConf);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -267,7 +288,8 @@ console.log("Configurations: " +
     pLine: pLineCfg,
     dateInfo: dateInfoCfg,
     health: healthCfg,
-    deviceStatus: deviceStatusCfg
+    deviceStatus: deviceStatusCfg,
+    weather: weatherConf
   }, null, 2));
 
 // Create minute ticker
@@ -401,6 +423,28 @@ function drawDeviceStatus() {
   drawComponent({ con: con, bat: bat }, deviceStatusCfg);
 }
 
+function drawWeather() {
+  var weather;
+  try {
+    weather = storage.readJSON('weather.json').weather;
+  } catch (e) {
+    console.log("Weather undefined!");
+    // return;
+  }
+  // Debugging weather
+  weather = { "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0, "uv": 0, "code": 300, "txt": "Light rain", "wind": 14, "wdir": 248, "loc": "Gothenburg", "time": 1691426008012.78686523437, "wrose": "w" };
+
+  var temp = Math.round(weather.temp - 273.15).toString().padEnd(3, " ");
+
+  drawComponent(
+    {
+      tH: weatherConf.element.tH.template,
+      t: temp
+    },
+    weatherConf
+  );
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -416,6 +460,7 @@ function drawSlow(d) {
   drawPercentLine(d);
   drawHealth();
   drawDeviceStatus();
+  drawWeather();
 }
 
 function drawLoop() {
