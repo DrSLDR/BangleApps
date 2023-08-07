@@ -471,10 +471,10 @@ function drawWeather() {
     weather = storage.readJSON('weather.json').weather;
   } catch (e) {
     console.log("Weather undefined!");
-    // return;
+    return;
   }
   // Debugging weather
-  weather = { "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0, "uv": 0, "code": 300, "txt": "Light rain", "wind": 14, "wdir": 248, "loc": "Gothenburg", "time": 1691426008012.78686523437, "wrose": "w" };
+  // weather = { "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0, "uv": 0, "code": 300, "txt": "Light rain", "wind": 14, "wdir": 248, "loc": "Gothenburg", "time": 1691426008012.78686523437, "wrose": "w" };
 
   var tempK = weather.temp;
   var tempC = Math.round(tempK - 273.15);
