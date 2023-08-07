@@ -174,7 +174,7 @@ const weatherConf = {
     t: {
       font: "6x8",
       scale: 1,
-      template: "000",
+      template: "-00 (000)",
       xNudge: -padding
     }
   }
@@ -434,12 +434,21 @@ function drawWeather() {
   // Debugging weather
   weather = { "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0, "uv": 0, "code": 300, "txt": "Light rain", "wind": 14, "wdir": 248, "loc": "Gothenburg", "time": 1691426008012.78686523437, "wrose": "w" };
 
-  var temp = Math.round(weather.temp - 273.15).toString().padEnd(3, " ");
+  var tempK = weather.temp;
+  var tempC = Math.round(tempK - 273.15);
+  var tempString = (function () {
+    var s = "";
+    s += (tempC < 0) ? "-" : " ";
+    var c = Math.abs(tempC);
+    s += c.toString().padStart(2, 0);
+    s += " [" + tempK + "]";
+    return s;
+  })();
 
   drawComponent(
     {
       tH: weatherConf.element.tH.template,
-      t: temp
+      t: tempString
     },
     weatherConf
   );
