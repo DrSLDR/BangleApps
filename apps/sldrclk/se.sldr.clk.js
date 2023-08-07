@@ -440,14 +440,3 @@ drawAll();
 
 //   return phase;
 // }
-
-// function drawSimpleClock() {
-//   // get date
-//   var d = new Date();
-//   var da = d.toString().split(" ");
-//   var dutc = getUTCTime(d);
-
-//   // Draw phase of the moon
-//   g.setFont(font, smallFontSize);
-//   g.drawString(`m:${getMoonPhase(d)}`, xyCenter, yposMoon, true);
-// }
