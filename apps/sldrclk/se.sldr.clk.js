@@ -28,6 +28,21 @@ console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos, dateLineP
 // Create minute ticker
 var minute = 0;
 
+/* Utility functions block */
+
+function calcWeekNo(d) {
+  // Define a new date that's in UTC
+  var dUTC = new Date(d - (d.getTimezoneOffset() * 60 * 1000));
+  // Redefine that date again, but at midnight
+  var dMidnight = new Date(dUTC.getFullYear(), dUTC.getMonth(), dUTC.getDate());
+  // Set the day to the nearest Thursday (current date + 4 - current day number)
+  dMidnight.setDate(dMidnight.getDate() + 4 - (dMidnight.getDay() || 7));
+  // Define the start of the year
+  var dYearStart = new Date(dMidnight.getFullYear(), 0, 1);
+  var weekNo = Math.ceil((((dMidnight - dYearStart) / 86400000) + 1) / 7);
+  return weekNo;
+}
+
 // TODO
 // Percent of Day
 // Percent of Year
@@ -38,7 +53,7 @@ var minute = 0;
 // Heart rate
 // Wind (Direction and speed)
 
-/* Business logic block */
+/* Main drawing block */
 
 function drawSlowClock(d) {
   // Time math
@@ -96,18 +111,6 @@ function drawTZ(d) {
   g.drawString(time, tzPos[0], tzPos[1], true);
 }
 
-function calcWeekNo(d) {
-  // Define a new date that's in UTC
-  var dUTC = new Date(d - (d.getTimezoneOffset() * 60 * 1000));
-  // Redefine that date again, but at midnight
-  var dMidnight = new Date(dUTC.getFullYear(), dUTC.getMonth(), dUTC.getDate());
-  // Set the day to the nearest Thursday (current date + 4 - current day number)
-  dMidnight.setDate(dMidnight.getDate() + 4 - (dMidnight.getDay() || 7));
-  // Define the start of the year
-  var dYearStart = new Date(dMidnight.getFullYear(), 0, 1);
-  var weekNo = Math.ceil((((dMidnight - dYearStart) / 86400000) + 1) / 7);
-  return weekNo;
-}
 
 function drawDateLine(d) {
   // Time math
