@@ -21,9 +21,10 @@ const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
 const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
 const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
-const dateLinePos = [49, tzPos[1] - padding - 8]; // element is 78x8
+const percentLinePos = [49, tzPos[1] - padding - 8]; // element is ?x8
+const dateLinePos = [49, percentLinePos[1] - padding - 8]; // element is 78x8
 
-console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos, dateLinePos]);
+console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos, percentLinePos, dateLinePos]);
 
 // Create minute ticker
 var minute = 0;
@@ -43,9 +44,13 @@ function calcWeekNo(d) {
   return weekNo;
 }
 
+function renderPercent(v) {
+  v = (v / 10).toFixed(1);
+  var t = v.toString().padStart(4, 0) + "%";
+  return t;
+}
+
 // TODO
-// Percent of Day
-// Percent of Year
 // Moon cycle
 // Battery status
 // Connection status
@@ -111,7 +116,6 @@ function drawTZ(d) {
   g.drawString(time, tzPos[0], tzPos[1], true);
 }
 
-
 function drawDateLine(d) {
   // Time math
   var day = d.toString().split(" ")[0].toUpperCase();
@@ -145,6 +149,36 @@ function drawDateLine(d) {
   g.drawString(week, x, y, true);
 }
 
+function drawPercentLine(d) {
+  // Time math
+  var dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  var fracOfD = Math.floor((d - dayStart) / 86400);
+  var pOfD = renderPercent(fracOfD);
+  var yearStart = new Date(d.getFullYear(), 0, 1);
+  var yearEnd = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
+  var yearLength = yearEnd - yearStart;
+  var fracOfY = Math.floor((d - yearStart) * 1000 / yearLength);
+  var pOfY = renderPercent(fracOfY);
+  // Reset the graphics
+  g.reset();
+  // Draw the pod header (16x6)
+  g.setFont(extraOtherFont);
+  var x = percentLinePos[0], y = percentLinePos[1] + 2;
+  g.drawString("POD:", x, y, true);
+  // Draw the pod (18x8)
+  x += 16, y -= 2;
+  g.setFont(mainOtherFont);
+  g.drawString(pOfD, x, y, true);
+  // Draw the poy header (16x6)
+  x += (padding + 18), y += 2;
+  g.setFont(extraOtherFont);
+  g.drawString("POY:", x, y, true);
+  // Draw the poy (18x8)
+  x += 16, y -= 2;
+  g.setFont(mainOtherFont);
+  g.drawString(pOfY, x, y, true);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -157,6 +191,7 @@ function drawSlow(d) {
   drawDate(d);
   drawTZ(d);
   drawDateLine(d);
+  drawPercentLine(d);
 }
 
 function drawLoop() {
@@ -258,43 +293,11 @@ drawAll();
 //   return phase;
 // }
 
-// function format2d1f(n) {
-//   s = n.toString();
-//   if (n < 10) {
-//     s = "00" + s;
-//   }
-//   else if (n < 100) {
-//     s = "0" + s;
-//   }
-//   s = s.substring(0, 2) + "." + s[2];
-//   return s
-// }
-
-// function getPoD(d) {
-//   // We can safely assume a day is 24 hours
-//   var startOfDay = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-//   var pod = Math.floor((d - startOfDay) / (60 * 60 * 24));
-//   return format2d1f(pod);
-// }
-
-// function getPoY(d) {
-//   // We can't safely assume that a year is 365 days, so figure that out first
-//   var startOfYear = new Date(d.getFullYear(), 0, 1);
-//   var endOfYear = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
-//   var lengthOfYear = endOfYear - startOfYear;
-//   var poy = Math.floor(((d - startOfYear) * 1000) / lengthOfYear);
-//   return format2d1f(poy);
-// }
-
 // function drawSimpleClock() {
 //   // get date
 //   var d = new Date();
 //   var da = d.toString().split(" ");
 //   var dutc = getUTCTime(d);
-
-//   // Draw percent passed of day and year
-//   g.setFont(font, smallFontSize);
-//   g.drawString(`pod:${getPoD(d)}% poy:${getPoY(d)}%`, xyCenter, yposPoD, true);
 
 //   // Draw phase of the moon
 //   g.setFont(font, smallFontSize);
