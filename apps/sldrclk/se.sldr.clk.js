@@ -3,6 +3,9 @@
 
 /* Preamble */
 
+// Get storage access
+const storage = require("Storage");
+
 // Load fonts
 require("Font7x11Numeric7Seg").add(Graphics);
 require("Font5x7Numeric7Seg").add(Graphics);
@@ -417,6 +420,7 @@ function drawSlow(d) {
 
 function drawLoop() {
   // Time math
+  // var d = new Date(2020, 11, 31, 23, 59, 59, 999);
   var d = new Date();
   var m = d.getMinutes();
   // Check if we should update the slow elements
