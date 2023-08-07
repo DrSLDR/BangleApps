@@ -6,8 +6,6 @@
 // Load fonts
 require("Font7x11Numeric7Seg").add(Graphics);
 require("Font5x7Numeric7Seg").add(Graphics);
-const mainOtherFont = "6x8";
-const extraOtherFont = "4x6";
 
 // Positioning blocks
 // Bangle 2 viewport is 176x176
@@ -34,25 +32,34 @@ const fastClockCfg = {
   }
 };
 const iso8601Cfg = {
-  font: "5x7Numeric7Seg",
-  scale: 1
+  element: {
+    main: {
+      font: "5x7Numeric7Seg",
+      scale: 1,
+      template: "0000-00-00"
+    }
+  }
 }
 const timestampCfg = {
-  font: "5x7Numeric7Seg",
-  scale: 1
+  element: {
+    main: {
+      font: "5x7Numeric7Seg",
+      scale: 1,
+      template: "0000000000"
+    }
+  }
 }
 const timezoneCfg = {
-  font: "6x8",
-  scale: 1
+  element: {
+    main: {
+      font: "6x8",
+      scale: 1,
+      template: "UTC+0000"
+    }
+  }
 }
 
 // Sizing math - it got too annoying to do by hand
-function deriveSize(cfg, str) {
-  g.setFont(cfg.font, cfg.scale);
-  var h = g.getFontHeight();
-  var w = g.stringWidth(str);
-  return { x: w, y: h };
-}
 
 // Calculate the max Y and total X size of a given component. Since only rows will be
 // laid out, the total Y size will just be the largest Y encountered.
@@ -73,11 +80,9 @@ var deriveAllXSizes = function (cfg) {
 
 deriveAllXSizes(slowClockCfg);
 deriveAllXSizes(fastClockCfg);
-
-fastClockCfg.size = deriveSize(fastClockCfg, "00");
-iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
-timestampCfg.size = deriveSize(timestampCfg, "0000000000");
-timezoneCfg.size = deriveSize(timezoneCfg, "UTC+0000");
+deriveAllXSizes(iso8601Cfg);
+deriveAllXSizes(timestampCfg);
+deriveAllXSizes(timezoneCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -116,6 +121,9 @@ var deriveAllPositions = function (cfg) {
 
 deriveAllPositions(slowClockCfg);
 deriveAllPositions(fastClockCfg);
+deriveAllPositions(iso8601Cfg);
+deriveAllPositions(timestampCfg);
+deriveAllPositions(timezoneCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -175,14 +183,6 @@ var drawComponent = function (txts, cfg) {
   }
 }
 
-function generalDraw(txt, cfg) {
-  // Reset the graphics
-  g.reset();
-  // Draw the time
-  g.setFont(cfg.font, cfg.scale);
-  g.drawString(txt, cfg.pos.x, cfg.pos.y, true);
-}
-
 function drawSlowClock(d) {
   var h = d.getHours(), m = d.getMinutes();
   var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
@@ -200,18 +200,18 @@ function drawISO8601(d) {
   var m = d.getMonth();
   var a = d.getDate();
   var time = y.toString() + "-" + m.toString().padStart(2, 0) + "-" + a.toString().padStart(2, 0);
-  generalDraw(time, iso8601Cfg);
+  drawComponent({ main: time }, iso8601Cfg);
 }
 
 function drawTimestamp(d) {
   var t = Math.floor(d.getTime() / 1000);
   var time = t.toString();
-  generalDraw(time, timestampCfg);
+  drawComponent({ main: time }, timestampCfg);
 }
 
 function drawTZ(d) {
   var time = d.toString().split(" ").reverse()[0].replace("GMT", "UTC");
-  generalDraw(time, timezoneCfg);
+  drawComponent({ main: time }, timezoneCfg);
 }
 
 function drawDateLine(d) {
