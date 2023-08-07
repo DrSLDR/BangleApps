@@ -41,7 +41,7 @@ function deriveSize(cfg, str) {
   return { x: w, y: h };
 }
 
-slowClockCfg.size = deriveSize(slowClockCfg, "00000");
+slowClockCfg.size = deriveSize(slowClockCfg, "00:00");
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
 iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
 timestampCfg.size = deriveSize(timestampCfg, "0000000000");
