@@ -9,7 +9,7 @@ require("Font5x7Numeric7Seg").add(Graphics);
 
 // Positioning blocks
 // Bangle 2 viewport is 176x176
-const dmax = 176
+const dmax = 176;
 const padding = 4;
 
 // Component configurations
