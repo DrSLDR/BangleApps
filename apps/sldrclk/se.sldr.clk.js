@@ -24,6 +24,10 @@ const fastClockCfg = {
   font: "7x11Numeric7Seg",
   scale: 1
 };
+const iso8601Cfg = {
+  font: "5x7Numeric7Seg",
+  scale: 1
+}
 
 // Sizing math - it got too annoying to do by hand
 function deriveSize(cfg, str) {
@@ -35,6 +39,7 @@ function deriveSize(cfg, str) {
 
 slowClockCfg.size = deriveSize(slowClockCfg, "00000");
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
+iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
 
 // Positioning math
 slowClockCfg.pos = {
@@ -45,9 +50,13 @@ fastClockCfg.pos = {
   x: slowClockCfg.pos.x + slowClockCfg.size.x,
   y: slowClockCfg.pos.y + slowClockCfg.size.y - fastClockCfg.size.y
 };
+iso8601Cfg.pos = {
+  x: (dmax - iso8601Cfg.size.x) / 2,
+  y: slowClockCfg.pos.y - padding - iso8601Cfg.size.y
+};
 
 console.log("Configurations: " +
-  [slowClockCfg, fastClockCfg].map((x) => JSON.stringify(x, null, 2)));
+  [slowClockCfg, fastClockCfg, iso8601Cfg].map((x) => JSON.stringify(x, null, 2)));
 
 // The slow clock sits dead center on the vertical axis and acts as the layout root
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
@@ -112,17 +121,13 @@ function drawFastClock(d) {
   generalDraw(time, fastClockCfg);
 }
 
-function drawDate(d) {
+function drawISO8601(d) {
   // Time math
   var y = d.getFullYear();
   var m = d.getMonth();
   var a = d.getDate();
   var time = y.toString() + "-" + m.toString().padStart(2, 0) + "-" + a.toString().padStart(2, 0);
-  // Reset the graphics
-  g.reset();
-  // Draw the time
-  g.setFont(extraTimeFont);
-  g.drawString(time, datePos[0], datePos[1], true);
+  generalDraw(time, iso8601Cfg);
 }
 
 function drawTimestamp(d) {
@@ -213,15 +218,15 @@ function drawPercentLine(d) {
 
 function drawFast(d) {
   drawFastClock(d);
-  drawTimestamp(d);
+  // drawTimestamp(d);
 }
 
 function drawSlow(d) {
   drawSlowClock(d);
-  drawDate(d);
-  drawTZ(d);
-  drawDateLine(d);
-  drawPercentLine(d);
+  drawISO8601(d);
+  // drawTZ(d);
+  // drawDateLine(d);
+  // drawPercentLine(d);
 }
 
 function drawLoop() {
