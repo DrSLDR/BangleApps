@@ -68,7 +68,8 @@ const pLineCfg = {
     pOfD: {
       font: "6x8",
       scale: 1,
-      template: "00.0%"
+      template: "00.0%",
+      xNudge: -padding,
     },
     pOfYH: {
       font: "4x6",
@@ -78,7 +79,8 @@ const pLineCfg = {
     pOfY: {
       font: "6x8",
       scale: 1,
-      template: "00.0%"
+      template: "00.0%",
+      xNudge: -padding,
     },
   }
 }
@@ -92,7 +94,8 @@ const dateInfoCfg = {
     d: {
       font: "6x8",
       scale: 1,
-      template: "MON"
+      template: "MON",
+      xNudge: -padding,
     },
     mdH: {
       font: "4x6",
@@ -102,7 +105,8 @@ const dateInfoCfg = {
     md: {
       font: "6x8",
       scale: 1,
-      template: "31"
+      template: "31",
+      xNudge: -padding,
     },
     wH: {
       font: "4x6",
@@ -112,7 +116,8 @@ const dateInfoCfg = {
     w: {
       font: "6x8",
       scale: 1,
-      template: "00"
+      template: "00",
+      xNudge: -padding,
     },
   }
 }
