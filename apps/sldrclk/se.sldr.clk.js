@@ -121,6 +121,32 @@ const dateInfoCfg = {
     },
   }
 }
+const healthCfg = {
+  element: {
+    hrH: {
+      font: "4x6",
+      scale: 1,
+      template: "HR:"
+    },
+    hr: {
+      font: "6x8",
+      scale: 1,
+      template: "000",
+      xNudge: -padding,
+    },
+    stepH: {
+      font: "4x6",
+      scale: 1,
+      template: "S:"
+    },
+    step: {
+      font: "6x8",
+      scale: 1,
+      template: "00000",
+      xNudge: -padding,
+    },
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -149,6 +175,7 @@ deriveAllXSizes(timestampCfg);
 deriveAllXSizes(timezoneCfg);
 deriveAllXSizes(pLineCfg);
 deriveAllXSizes(dateInfoCfg);
+deriveAllXSizes(healthCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -179,6 +206,10 @@ dateInfoCfg.pos = {
   x: (dmax - dateInfoCfg.size.x) / 2,
   y: pLineCfg.pos.y - padding - dateInfoCfg.size.y
 }
+healthCfg.pos = {
+  x: padding,
+  y: padding
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -201,6 +232,7 @@ deriveAllPositions(timestampCfg);
 deriveAllPositions(timezoneCfg);
 deriveAllPositions(pLineCfg);
 deriveAllPositions(dateInfoCfg);
+deriveAllPositions(healthCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -210,7 +242,8 @@ console.log("Configurations: " +
     timestamp: timestampCfg,
     timezone: timezoneCfg,
     pLine: pLineCfg,
-    dateInfo: dateInfoCfg
+    dateInfo: dateInfoCfg,
+    health: healthCfg
   }, null, 2));
 
 // Create minute ticker
@@ -243,7 +276,6 @@ function renderPercent(v) {
 // Battery status
 // Connection status
 // Temperature
-// Heart rate
 // Wind (Direction and speed)
 // Variable abstraction
 
@@ -327,6 +359,20 @@ function drawPercentLine(d) {
     }, pLineCfg);
 }
 
+function drawHealth() {
+  var bpm = Math.round(Bangle.getHealthStatus().bpm || Bangle.getHealthStatus("last").bpm);
+  bpm = bpm.toString().padStart(3, 0);
+  var steps = Math.round(Bangle.getHealthStatus().steps || Bangle.getHealthStatus("last").steps);
+  steps = steps.toString().padStart(5, 0);
+  drawComponent(
+    {
+      hrH: healthCfg.element.hrH.template,
+      hr: bpm,
+      stepH: healthCfg.element.stepH.template,
+      step: steps
+    }, healthCfg);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -340,6 +386,7 @@ function drawSlow(d) {
   drawTZ(d);
   drawDateInfoLine(d);
   drawPercentLine(d);
+  drawHealth();
 }
 
 function drawLoop() {
