@@ -15,16 +15,49 @@ const extraOtherFont = "4x6";
 // Bangle 2 viewport is 176x176
 const dmax = 176
 const padding = 4;
+
+// Element configurations
+const slowClockCfg = {
+  font: mainTimeFont,
+  scale: 2
+};
+const fastClockCfg = {
+  font: mainTimeFont,
+  scale: 1
+};
+
+// Sizing math - it got too annoying to do by hand
+function deriveSize(cfg, str) {
+  g.setFont(cfg.font, cfg.scale);
+  var h = g.getFontHeight();
+  var w = g.stringWidth(str);
+  return { x: w, y: h };
+}
+
+slowClockCfg["size"] = deriveSize(slowClockCfg, "00000");
+fastClockCfg["size"] = deriveSize(fastClockCfg, "00");
+
+// Positioning math
+slowClockCfg["pos"] = {
+  x: (dmax - slowClockCfg.size.x - fastClockCfg.size.x) / 2,
+  y: (dmax - slowClockCfg.size.y) / 2
+};
+fastClockCfg["pos"] = {
+  x: slowClockCfg.pos.x + slowClockCfg.size.x,
+  y: slowClockCfg.pos.y + slowClockCfg.size.y - fastClockCfg.size.y
+};
+
+console.log("Configurations: " +
+  [slowClockCfg, fastClockCfg].map((x) => JSON.stringify(x, null, 2)));
+
 // The slow clock sits dead center on the vertical axis and acts as the layout root
-const slowClockPos = [(dmax - 70 - 14) / 2, (dmax - 22) / 2]; // element is 70x22
-const fastClockPos = [slowClockPos[0] + 70, dmax / 2]; // element is 14x11
 const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
 const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
 const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
 const percentLinePos = [49, tzPos[1] - padding - 8]; // element is ?x8
 const dateLinePos = [49, percentLinePos[1] - padding - 8]; // element is 78x8
 
-console.log([slowClockPos, fastClockPos, datePos, timestampPos, tzPos, percentLinePos, dateLinePos]);
+console.log([datePos, timestampPos, tzPos, percentLinePos, dateLinePos]);
 
 // Create minute ticker
 var minute = 0;
@@ -60,26 +93,24 @@ function renderPercent(v) {
 
 /* Main drawing block */
 
-function drawSlowClock(d) {
-  // Time math
-  var h = d.getHours(), m = d.getMinutes();
-  var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
+function generalDraw(txt, cfg) {
   // Reset the graphics
   g.reset();
   // Draw the time
-  g.setFont(mainTimeFont, 2);
-  g.drawString(time, slowClockPos[0], slowClockPos[1], true);
+  g.setFont(cfg.font, cfg.scale);
+  g.drawString(txt, cfg.pos.x, cfg.pos.y, true);
+}
+
+function drawSlowClock(d) {
+  var h = d.getHours(), m = d.getMinutes();
+  var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
+  generalDraw(time, slowClockCfg);
 }
 
 function drawFastClock(d) {
-  // Time math
   var s = d.getSeconds();
   var time = s.toString().padStart(2, 0)
-  // Reset the graphics
-  g.reset();
-  // Draw the time
-  g.setFont(mainTimeFont);
-  g.drawString(time, fastClockPos[0], fastClockPos[1], true);
+  generalDraw(time, fastClockCfg);
 }
 
 function drawDate(d) {
