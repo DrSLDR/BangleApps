@@ -176,6 +176,7 @@ function calcWeekNo(d) {
 function renderPercent(v) {
   v = (v / 10).toFixed(1);
   var t = v.toString().padStart(4, 0) + "%";
+  if (v == 100) t = "100 %";
   return t;
 }
 
