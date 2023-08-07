@@ -201,6 +201,21 @@ const weatherConf = {
     },
   }
 }
+const moonCfg = {
+  element: {
+    moonH: {
+      font: "4x6",
+      scale: 1,
+      template: "M:"
+    },
+    moon: {
+      font: "6x8",
+      scale: 1,
+      template: "00.0%[XXX]",
+      xNudge: -padding,
+    }
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -232,6 +247,7 @@ deriveAllXSizes(dateInfoCfg);
 deriveAllXSizes(healthCfg);
 deriveAllXSizes(deviceStatusCfg);
 deriveAllXSizes(weatherConf);
+deriveAllXSizes(moonCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -274,6 +290,10 @@ weatherConf.pos = {
   x: (dmax - weatherConf.size.x) / 2,
   y: deviceStatusCfg.pos.y + deviceStatusCfg.size.y + padding,
 }
+moonCfg.pos = {
+  x: (dmax - moonCfg.size.x) / 2,
+  y: weatherConf.pos.y + weatherConf.size.y + padding,
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -299,6 +319,7 @@ deriveAllPositions(dateInfoCfg);
 deriveAllPositions(healthCfg);
 deriveAllPositions(deviceStatusCfg);
 deriveAllPositions(weatherConf);
+deriveAllPositions(moonCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -311,7 +332,8 @@ console.log("Configurations: " +
     dateInfo: dateInfoCfg,
     health: healthCfg,
     deviceStatus: deviceStatusCfg,
-    weather: weatherConf
+    weather: weatherConf,
+    moon: moonCfg
   }, null, 2));
 
 // Create minute ticker
@@ -487,6 +509,13 @@ function drawWeather() {
   );
 }
 
+function drawMoon(d) {
+
+  var moon = "00.0%[NEW]"
+
+  drawComponent({ moonH: moonCfg.element.moonH.template, moon: moon }, moonCfg);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -503,6 +532,7 @@ function drawSlow(d) {
   drawHealth();
   drawDeviceStatus();
   drawWeather();
+  drawMoon(d);
 }
 
 function drawLoop() {
