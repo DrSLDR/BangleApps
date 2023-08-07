@@ -28,6 +28,10 @@ const iso8601Cfg = {
   font: "5x7Numeric7Seg",
   scale: 1
 }
+const timestampCfg = {
+  font: "5x7Numeric7Seg",
+  scale: 1
+}
 
 // Sizing math - it got too annoying to do by hand
 function deriveSize(cfg, str) {
@@ -40,6 +44,7 @@ function deriveSize(cfg, str) {
 slowClockCfg.size = deriveSize(slowClockCfg, "00000");
 fastClockCfg.size = deriveSize(fastClockCfg, "00");
 iso8601Cfg.size = deriveSize(iso8601Cfg, "0000-00-00");
+timestampCfg.size = deriveSize(timestampCfg, "0000000000");
 
 // Positioning math
 slowClockCfg.pos = {
@@ -54,18 +59,20 @@ iso8601Cfg.pos = {
   x: (dmax - iso8601Cfg.size.x) / 2,
   y: slowClockCfg.pos.y - padding - iso8601Cfg.size.y
 };
+timestampCfg.pos = {
+  x: (dmax - timestampCfg.size.x) / 2,
+  y: slowClockCfg.pos.y + slowClockCfg.size.y + padding,
+};
 
 console.log("Configurations: " +
   [slowClockCfg, fastClockCfg, iso8601Cfg].map((x) => JSON.stringify(x, null, 2)));
 
 // The slow clock sits dead center on the vertical axis and acts as the layout root
-const datePos = [(dmax - 50) / 2, slowClockPos[1] - padding - 7]; // element is 50x7
-const timestampPos = [datePos[0], slowClockPos[1] + 22 + padding]; // element is 50x7
 const tzPos = [(dmax - 40) / 2, (dmax - 7 - padding)]; // element is 40x8
 const percentLinePos = [49, tzPos[1] - padding - 8]; // element is ?x8
 const dateLinePos = [49, percentLinePos[1] - padding - 8]; // element is 78x8
 
-console.log([datePos, timestampPos, tzPos, percentLinePos, dateLinePos]);
+console.log([tzPos, percentLinePos, dateLinePos]);
 
 // Create minute ticker
 var minute = 0;
@@ -131,14 +138,9 @@ function drawISO8601(d) {
 }
 
 function drawTimestamp(d) {
-  // Time math
   var t = Math.floor(d.getTime() / 1000);
   var time = t.toString();
-  // Reset the graphics
-  g.reset();
-  // Draw the time
-  g.setFont(extraTimeFont);
-  g.drawString(time, timestampPos[0], timestampPos[1], true);
+  generalDraw(time, timestampCfg);
 }
 
 function drawTZ(d) {
@@ -218,7 +220,7 @@ function drawPercentLine(d) {
 
 function drawFast(d) {
   drawFastClock(d);
-  // drawTimestamp(d);
+  drawTimestamp(d);
 }
 
 function drawSlow(d) {
