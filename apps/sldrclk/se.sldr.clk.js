@@ -147,6 +147,20 @@ const healthCfg = {
     },
   }
 }
+const deviceStatusCfg = {
+  element: {
+    con: {
+      font: "6x8",
+      scale: 1,
+      template: "*"
+    },
+    bat: {
+      font: "6x8",
+      scale: 1,
+      template: "000%"
+    }
+  }
+}
 
 // Sizing math - it got too annoying to do by hand
 
@@ -176,6 +190,7 @@ deriveAllXSizes(timezoneCfg);
 deriveAllXSizes(pLineCfg);
 deriveAllXSizes(dateInfoCfg);
 deriveAllXSizes(healthCfg);
+deriveAllXSizes(deviceStatusCfg);
 
 // Positioning math
 slowClockCfg.pos = {
@@ -210,6 +225,10 @@ healthCfg.pos = {
   x: padding,
   y: padding
 }
+deviceStatusCfg.pos = {
+  x: dmax - padding - deviceStatusCfg.size.x,
+  y: padding
+}
 
 // Calculate absolute position of elements
 var deriveAllPositions = function (cfg) {
@@ -233,6 +252,7 @@ deriveAllPositions(timezoneCfg);
 deriveAllPositions(pLineCfg);
 deriveAllPositions(dateInfoCfg);
 deriveAllPositions(healthCfg);
+deriveAllPositions(deviceStatusCfg);
 
 console.log("Configurations: " +
   JSON.stringify({
@@ -243,7 +263,8 @@ console.log("Configurations: " +
     timezone: timezoneCfg,
     pLine: pLineCfg,
     dateInfo: dateInfoCfg,
-    health: healthCfg
+    health: healthCfg,
+    deviceStatus: deviceStatusCfg
   }, null, 2));
 
 // Create minute ticker
@@ -273,8 +294,6 @@ function renderPercent(v) {
 
 // TODO
 // Moon cycle
-// Battery status
-// Connection status
 // Temperature
 // Wind (Direction and speed)
 // Variable abstraction
@@ -373,6 +392,12 @@ function drawHealth() {
     }, healthCfg);
 }
 
+function drawDeviceStatus() {
+  var bat = (E.getBattery() + "%").padStart(4, " ");
+  var con = NRF.getSecurityStatus().connected ? " " : deviceStatusCfg.element.con.template;
+  drawComponent({ con: con, bat: bat }, deviceStatusCfg);
+}
+
 /* Battery economy block */
 
 function drawFast(d) {
@@ -387,6 +412,7 @@ function drawSlow(d) {
   drawDateInfoLine(d);
   drawPercentLine(d);
   drawHealth();
+  drawDeviceStatus();
 }
 
 function drawLoop() {
