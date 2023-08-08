@@ -12,3 +12,4 @@
 0.12: Complete rewrite - better layout, more features, nicer on the battery.
 0.13: Stopped using minified code
 0.14: Bugfixed error in wind speed conversion
+0.15: Bugfixed crashing weather line, fixed step counter, refactored for speed.
