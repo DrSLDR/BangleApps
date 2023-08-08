@@ -1,7 +1,7 @@
 {
   "id": "sldrclk",
   "name": "SLDR Clock",
-  "version": "0.13",
+  "version": "0.14",
   "description": "An information-packed watchface, by a nerd, for nerds",
   "icon": "se.sldr.clk.png",
   "type": "clock",
