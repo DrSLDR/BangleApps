@@ -365,6 +365,22 @@ function renderPercent(v) {
   return t;
 }
 
+function getSteps() {
+  var steps = 0;
+  try {
+    if (WIDGETS.wpedom !== undefined) {
+      steps = WIDGETS.wpedom.getSteps();
+    } else if (WIDGETS.activepedom !== undefined) {
+      steps = WIDGETS.activepedom.getSteps();
+    } else {
+      steps = Bangle.getHealthStatus("day").steps;
+    }
+  } catch (ex) {
+  }
+
+  return steps;
+}
+
 // TODO
 // Variable abstraction
 
@@ -451,7 +467,7 @@ function drawPercentLine(d) {
 function drawHealth() {
   var bpm = Math.round(Bangle.getHealthStatus().bpm || Bangle.getHealthStatus("last").bpm);
   bpm = bpm.toString().padStart(3, 0);
-  var steps = Math.round(Bangle.getHealthStatus().steps || Bangle.getHealthStatus("last").steps);
+  var steps = getSteps();
   steps = steps.toString().padStart(5, 0);
   drawComponent(
     {
