@@ -325,20 +325,20 @@ deriveAllPositions(deviceStatusCfg);
 deriveAllPositions(weatherConf);
 deriveAllPositions(moonCfg);
 
-console.log("Configurations: " +
-  JSON.stringify({
-    slowClock: slowClockCfg,
-    fastClock: fastClockCfg,
-    iso8601: iso8601Cfg,
-    timestamp: timestampCfg,
-    timezone: timezoneCfg,
-    pLine: pLineCfg,
-    dateInfo: dateInfoCfg,
-    health: healthCfg,
-    deviceStatus: deviceStatusCfg,
-    weather: weatherConf,
-    moon: moonCfg
-  }, null, 2));
+// console.log("Configurations: " +
+//   JSON.stringify({
+//     slowClock: slowClockCfg,
+//     fastClock: fastClockCfg,
+//     iso8601: iso8601Cfg,
+//     timestamp: timestampCfg,
+//     timezone: timezoneCfg,
+//     pLine: pLineCfg,
+//     dateInfo: dateInfoCfg,
+//     health: healthCfg,
+//     deviceStatus: deviceStatusCfg,
+//     weather: weatherConf,
+//     moon: moonCfg
+//   }, null, 2));
 
 // Create minute ticker
 var minute = 0;
@@ -520,11 +520,11 @@ function drawMoon(d) {
   // moon.
   var lunationFrac = (cycle % 1);
   var minSinceNew = lunationFrac * lunation;
-  console.log("Period: " + minSinceNew);
-  console.log("Lunation fraction: " + lunationFrac);
+  // console.log("Period: " + minSinceNew);
+  // console.log("Lunation fraction: " + lunationFrac);
   // Calculate sinusoidal point of the cycle
   var sineMoon = ((-1 * Math.cos(lunationFrac * Math.PI * 2)) + 1) / 2;
-  console.log("Sine moon: " + sineMoon);
+  // console.log("Sine moon: " + sineMoon);
   // Permil of cycle
   var cyclePermil = Math.round(sineMoon * 1000);
   var moonPercent = renderPercent(cyclePermil);
@@ -575,7 +575,7 @@ function drawLoop() {
   var m = d.getMinutes();
   // Check if we should update the slow elements
   if (m != minute) {
-    console.log("Doing slow updates!");
+    // console.log("Doing slow updates!");
     minute = m;
     drawSlow(d);
   }

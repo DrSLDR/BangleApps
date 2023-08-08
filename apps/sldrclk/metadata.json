@@ -13,7 +13,7 @@
   "storage": [
     {
       "name": "sldrclk.app.js",
-      "url": "se.sldr.clk.min.js"
+      "url": "se.sldr.clk.js"
     },
     {
       "name": "sldrclk.img",
