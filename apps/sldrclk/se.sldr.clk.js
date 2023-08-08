@@ -489,7 +489,7 @@ function drawWeather() {
     s += "C[" + tempK + "]";
     return s;
   })();
-  var windSpeed = (weather.wind * 1609.344 / 3600).toFixed(1);
+  var windSpeed = (weather.wind / 3.6).toFixed(1);
   var windAngle = weather.wdir;
   var windRose = [
     'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
