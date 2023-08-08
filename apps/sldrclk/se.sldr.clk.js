@@ -469,35 +469,43 @@ function drawDeviceStatus() {
 }
 
 function drawWeather() {
-  var weather;
+  var weather, tempString = " ? ", windString = " ? ", humidityString = " ? ";
   try {
-    weather = storage.readJSON('weather.json').weather;
-  } catch (e) {
-    console.log("Weather undefined!");
-    return;
-  }
-  // Debugging weather
-  // weather = { "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0, "uv": 0, "code": 300, "txt": "Light rain", "wind": 14, "wdir": 248, "loc": "Gothenburg", "time": 1691426008012.78686523437, "wrose": "w" };
+    var weatherStore = storage.readJSON('weather.json');
+    weather = weatherStore.weather;
 
-  var tempK = weather.temp;
-  var tempC = Math.round(tempK - 273.15);
-  var tempString = (function () {
-    var s = "";
-    s += (tempC < 0) ? "-" : " ";
-    var c = Math.abs(tempC);
-    s += c.toString().padStart(2, 0);
-    s += "C[" + tempK + "]";
-    return s;
-  })();
-  var windSpeed = (weather.wind / 3.6).toFixed(1);
-  var windAngle = weather.wdir;
-  var windRose = [
-    'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
-    'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'
-  ][Math.floor((windAngle + 11.25) / 22.5)];
-  var windString = windSpeed.padStart(4, 0) + "[" + windRose + "]";
-  var humidity = weather.hum;
-  var humidityString = humidity.toString().padStart(2, 0).padStart(3, " ") + "%";
+    // Debugging weather
+    // weather = {
+    //   "temp": 289, "hi": 291, "lo": 286, "hum": 98, "rain": 0,
+    //   "uv": 0, "code": 300, "txt": "Light rain", "wind": 14,
+    //   "wdir": 248, "loc": "Gothenburg",
+    //   "time": 1691426008012.78686523437, "wrose": "w"
+    // };
+
+    var tempK = weather.temp;
+    var tempC = Math.round(tempK - 273.15);
+    tempString = (function () {
+      var s = "";
+      s += (tempC < 0) ? "-" : " ";
+      var c = Math.abs(tempC);
+      s += c.toString().padStart(2, 0);
+      s += "C[" + tempK + "]";
+      return s;
+    })();
+
+    var windSpeed = (weather.wind / 3.6).toFixed(1);
+    var windAngle = weather.wdir;
+    var windRose = [
+      'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+      'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'
+    ][Math.floor((windAngle + 11.25) / 22.5)];
+    windString = windSpeed.padStart(4, 0) + "[" + windRose + "]";
+
+    var humidity = weather.hum;
+    humidityString = humidity.toString().padStart(2, 0).padStart(3, " ") + "%";
+  } catch (e) {
+    console.log("Error reading weather!");
+  }
 
   drawComponent(
     {
