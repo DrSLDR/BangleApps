@@ -225,12 +225,12 @@ const moonCfg = {
 
 // Calculate the max Y and total X size of a given component. Since only rows will be
 // laid out, the total Y size will just be the largest Y encountered.
-var deriveAllXSizes = function (cfg) {
-  var tx = 0, ty = 0, elements = 0;
+let deriveAllXSizes = function (cfg) {
+  let tx = 0, ty = 0, elements = 0;
   for (var k of Object.keys(cfg.element)) {
     g.setFont(cfg.element[k].font, cfg.element[k].scale);
-    var w = g.stringWidth(cfg.element[k].template);
-    var h = g.getFontHeight();
+    let w = g.stringWidth(cfg.element[k].template);
+    let h = g.getFontHeight();
     tx += w;
     if (cfg.element[k].xNudge) tx += cfg.element[k].xNudge;
     if (h > ty) ty = h;
@@ -300,11 +300,11 @@ moonCfg.pos = {
 }
 
 // Calculate absolute position of elements
-var deriveAllPositions = function (cfg) {
-  var x = cfg.pos.x, element = 0;
-  for (var k of Object.keys(cfg.element)) {
+let deriveAllPositions = function (cfg) {
+  let x = cfg.pos.x, element = 0;
+  for (let k of Object.keys(cfg.element)) {
     if (element > 0) x += padding;
-    var y = cfg.pos.y;
+    let y = cfg.pos.y;
     if (cfg.element[k].size.y < cfg.size.y) y += (cfg.size.y - cfg.element[k].size.y);
     if (cfg.element[k].xNudge) x += cfg.element[k].xNudge;
     cfg.element[k].pos = { x: x, y: y };
@@ -341,32 +341,32 @@ deriveAllPositions(moonCfg);
 //   }, null, 2));
 
 // Create minute ticker
-var minute = 0;
+let minute = 0;
 
 /* Utility functions block */
 
-function calcWeekNo(d) {
+let calcWeekNo = function (d) {
   // Define a new date that's in UTC
-  var dUTC = new Date(d - (d.getTimezoneOffset() * 60 * 1000));
+  let dUTC = new Date(d - (d.getTimezoneOffset() * 60 * 1000));
   // Redefine that date again, but at midnight
-  var dMidnight = new Date(dUTC.getFullYear(), dUTC.getMonth(), dUTC.getDate());
+  let dMidnight = new Date(dUTC.getFullYear(), dUTC.getMonth(), dUTC.getDate());
   // Set the day to the nearest Thursday (current date + 4 - current day number)
   dMidnight.setDate(dMidnight.getDate() + 4 - (dMidnight.getDay() || 7));
   // Define the start of the year
-  var dYearStart = new Date(dMidnight.getFullYear(), 0, 1);
-  var weekNo = Math.ceil((((dMidnight - dYearStart) / 86400000) + 1) / 7);
+  let dYearStart = new Date(dMidnight.getFullYear(), 0, 1);
+  let weekNo = Math.ceil((((dMidnight - dYearStart) / 86400000) + 1) / 7);
   return weekNo;
 }
 
-function renderPercent(v) {
+let renderPercent = function (v) {
   v = (v / 10).toFixed(1);
-  var t = v.toString().padStart(4, 0) + "%";
+  let t = v.toString().padStart(4, 0) + "%";
   if (v == 100) t = "100 %";
   return t;
 }
 
-function getSteps() {
-  var steps = 0;
+let getSteps = function () {
+  let steps = 0;
   try {
     if (WIDGETS.wpedom !== undefined) {
       steps = WIDGETS.wpedom.getSteps();
@@ -381,12 +381,9 @@ function getSteps() {
   return steps;
 }
 
-// TODO
-// Variable abstraction
-
 /* Main drawing block */
 
-var drawString = function (txt, cfg) {
+let drawString = function (txt, cfg) {
   // Reset the graphics
   g.reset();
   // Draw the time
@@ -394,47 +391,47 @@ var drawString = function (txt, cfg) {
   g.drawString(txt, cfg.pos.x, cfg.pos.y, true);
 }
 
-var drawComponent = function (txts, cfg) {
-  for (var k of Object.keys(cfg.element)) {
+let drawComponent = function (txts, cfg) {
+  for (let k of Object.keys(cfg.element)) {
     drawString(txts[k], cfg.element[k]);
   }
 }
 
-function drawSlowClock(d) {
-  var h = d.getHours(), m = d.getMinutes();
-  var time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
+let drawSlowClock = function (d) {
+  let h = d.getHours(), m = d.getMinutes();
+  let time = h.toString().padStart(2, 0) + ":" + m.toString().padStart(2, 0);
   drawComponent({ main: time }, slowClockCfg);
 }
 
-function drawFastClock(d) {
-  var s = d.getSeconds();
-  var time = s.toString().padStart(2, 0)
+let drawFastClock = function (d) {
+  let s = d.getSeconds();
+  let time = s.toString().padStart(2, 0)
   drawComponent({ main: time }, fastClockCfg);
 }
 
-function drawISO8601(d) {
-  var y = d.getFullYear();
-  var m = d.getMonth() + 1;
-  var a = d.getDate();
-  var time = y.toString() + "-" + m.toString().padStart(2, 0) + "-" + a.toString().padStart(2, 0);
+let drawISO8601 = function (d) {
+  let y = d.getFullYear();
+  let m = d.getMonth() + 1;
+  let a = d.getDate();
+  let time = y.toString() + "-" + m.toString().padStart(2, 0) + "-" + a.toString().padStart(2, 0);
   drawComponent({ main: time }, iso8601Cfg);
 }
 
-function drawTimestamp(d) {
-  var t = Math.floor(d.getTime() / 1000);
-  var time = t.toString();
+let drawTimestamp = function (d) {
+  let t = Math.floor(d.getTime() / 1000);
+  let time = t.toString();
   drawComponent({ main: time }, timestampCfg);
 }
 
-function drawTZ(d) {
-  var time = d.toString().split(" ").reverse()[0].replace("GMT", "UTC");
+let drawTZ = function (d) {
+  let time = d.toString().split(" ").reverse()[0].replace("GMT", "UTC");
   drawComponent({ main: time }, timezoneCfg);
 }
 
-function drawDateInfoLine(d) {
-  var day = d.toString().split(" ")[0].toUpperCase();
-  var dom = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
-  var week = calcWeekNo(d).toString().padStart(2, 0);
+let drawDateInfoLine = function (d) {
+  let day = d.toString().split(" ")[0].toUpperCase();
+  let dom = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+  let week = calcWeekNo(d).toString().padStart(2, 0);
   drawComponent(
     {
       dH: dateInfoCfg.element.dH.template,
@@ -446,15 +443,15 @@ function drawDateInfoLine(d) {
     }, dateInfoCfg);
 }
 
-function drawPercentLine(d) {
-  var dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
-  var fracOfD = Math.floor((d - dayStart) / 86400);
-  var pOfD = renderPercent(fracOfD);
-  var yearStart = new Date(d.getFullYear(), 0, 1);
-  var yearEnd = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
-  var yearLength = yearEnd - yearStart;
-  var fracOfY = Math.floor((d - yearStart) * 1000 / yearLength);
-  var pOfY = renderPercent(fracOfY);
+let drawPercentLine = function (d) {
+  let dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 0, 0, 0, 0);
+  let fracOfD = Math.floor((d - dayStart) / 86400);
+  let pOfD = renderPercent(fracOfD);
+  let yearStart = new Date(d.getFullYear(), 0, 1);
+  let yearEnd = new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999);
+  let yearLength = yearEnd - yearStart;
+  let fracOfY = Math.floor((d - yearStart) * 1000 / yearLength);
+  let pOfY = renderPercent(fracOfY);
   drawComponent(
     {
       pOfDH: pLineCfg.element.pOfDH.template,
@@ -464,10 +461,10 @@ function drawPercentLine(d) {
     }, pLineCfg);
 }
 
-function drawHealth() {
-  var bpm = Math.round(Bangle.getHealthStatus().bpm || Bangle.getHealthStatus("last").bpm);
+let drawHealth = function () {
+  let bpm = Math.round(Bangle.getHealthStatus().bpm || Bangle.getHealthStatus("last").bpm);
   bpm = bpm.toString().padStart(3, 0);
-  var steps = getSteps();
+  let steps = getSteps();
   steps = steps.toString().padStart(5, 0);
   drawComponent(
     {
@@ -478,16 +475,16 @@ function drawHealth() {
     }, healthCfg);
 }
 
-function drawDeviceStatus() {
-  var bat = (E.getBattery() + "%").padStart(4, " ");
-  var con = NRF.getSecurityStatus().connected ? " " : deviceStatusCfg.element.con.template;
+let drawDeviceStatus = function () {
+  let bat = (E.getBattery() + "%").padStart(4, " ");
+  let con = NRF.getSecurityStatus().connected ? " " : deviceStatusCfg.element.con.template;
   drawComponent({ con: con, bat: bat }, deviceStatusCfg);
 }
 
-function drawWeather() {
-  var weather, tempString = " ? ", windString = " ? ", humidityString = " ? ";
+let drawWeather = function () {
+  let weather, tempString = " ? ", windString = " ? ", humidityString = " ? ";
   try {
-    var weatherStore = storage.readJSON('weather.json');
+    let weatherStore = storage.readJSON('weather.json');
     weather = weatherStore.weather;
 
     // Debugging weather
@@ -498,26 +495,26 @@ function drawWeather() {
     //   "time": 1691426008012.78686523437, "wrose": "w"
     // };
 
-    var tempK = weather.temp;
-    var tempC = Math.round(tempK - 273.15);
+    let tempK = weather.temp;
+    let tempC = Math.round(tempK - 273.15);
     tempString = (function () {
-      var s = "";
+      let s = "";
       s += (tempC < 0) ? "-" : " ";
-      var c = Math.abs(tempC);
+      let c = Math.abs(tempC);
       s += c.toString().padStart(2, 0);
       s += "C[" + tempK + "]";
       return s;
     })();
 
-    var windSpeed = (weather.wind / 3.6).toFixed(1);
-    var windAngle = weather.wdir;
-    var windRose = [
+    let windSpeed = (weather.wind / 3.6).toFixed(1);
+    let windAngle = weather.wdir;
+    let windRose = [
       'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
       'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'
     ][Math.floor((windAngle + 11.25) / 22.5)];
     windString = windSpeed.padStart(4, 0) + "[" + windRose + "]";
 
-    var humidity = weather.hum;
+    let humidity = weather.hum;
     humidityString = humidity.toString().padStart(2, 0).padStart(3, " ") + "%";
   } catch (e) {
     console.log("Error reading weather!");
@@ -536,24 +533,23 @@ function drawWeather() {
   );
 }
 
-function drawMoon(d) {
+let drawMoon = function (d) {
   // Get millisecond difference between now and the known new moon, divide that down to
   // minutes, then into cycles.
-  var cycle = (((d.getTime() - knownNew.getTime()) / 60000) / lunation);
+  let cycle = (((d.getTime() - knownNew.getTime()) / 60000) / lunation);
   // Extract the decimal component, and multiply back to get minutes since the last new
   // moon.
-  var lunationFrac = (cycle % 1);
-  var minSinceNew = lunationFrac * lunation;
+  let lunationFrac = (cycle % 1);
   // console.log("Period: " + minSinceNew);
   // console.log("Lunation fraction: " + lunationFrac);
   // Calculate sinusoidal point of the cycle
-  var sineMoon = ((-1 * Math.cos(lunationFrac * Math.PI * 2)) + 1) / 2;
+  let sineMoon = ((-1 * Math.cos(lunationFrac * Math.PI * 2)) + 1) / 2;
   // console.log("Sine moon: " + sineMoon);
   // Permil of cycle
-  var cyclePermil = Math.round(sineMoon * 1000);
-  var moonPercent = renderPercent(cyclePermil);
+  let cyclePermil = Math.round(sineMoon * 1000);
+  let moonPercent = renderPercent(cyclePermil);
   // Set the descriptor
-  var descriptor = "NEW";
+  let descriptor = "NEW";
   if ((lunationFrac > 0.025 && lunationFrac < 0.225) ||
     (lunationFrac > 0.275 && lunationFrac < 0.475)) {
     descriptor = "WAX";
@@ -568,19 +564,19 @@ function drawMoon(d) {
     descriptor = "Q:3";
   }
 
-  var moon = moonPercent + "[" + descriptor + "]";
+  let moon = moonPercent + "[" + descriptor + "]";
 
   drawComponent({ moonH: moonCfg.element.moonH.template, moon: moon }, moonCfg);
 }
 
 /* Battery economy block */
 
-function drawFast(d) {
+let drawFast = function (d) {
   drawFastClock(d);
   drawTimestamp(d);
 }
 
-function drawSlow(d) {
+let drawSlow = function (d) {
   drawSlowClock(d);
   drawISO8601(d);
   drawTZ(d);
@@ -592,11 +588,11 @@ function drawSlow(d) {
   drawMoon(d);
 }
 
-function drawLoop() {
+let drawLoop = function () {
   // Time math
-  // var d = new Date(2020, 11, 31, 23, 59, 59, 999);
-  var d = new Date();
-  var m = d.getMinutes();
+  // let d = new Date(2020, 11, 31, 23, 59, 59, 999);
+  let d = new Date();
+  let m = d.getMinutes();
   // Check if we should update the slow elements
   if (m != minute) {
     // console.log("Doing slow updates!");
@@ -608,8 +604,8 @@ function drawLoop() {
 }
 
 // Short circuit time magic for initialization
-function drawAll() {
-  var d = new Date();
+let drawAll = function () {
+  let d = new Date();
   drawSlow(d);
   drawFast(d);
 }
@@ -620,7 +616,7 @@ function drawAll() {
 g.clear();
 
 // Create the main timer
-var timer = setInterval(drawLoop, 500);
+let timer = setInterval(drawLoop, 500);
 
 // Handle the LCD being off
 Bangle.on('lcdPower', on => {
